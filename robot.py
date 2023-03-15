@@ -1,11 +1,14 @@
 from drivetrain import Drivetrain
+from arm import Arm
 
 import wpilib
 
 class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
-        self.drivetrain = Drivetrain()
         self.stick = wpilib.Joystick(0)
+
+        self.drivetrain = Drivetrain()
+        self.arm = Arm()
 
     def teleopInit(self):
         self.drivetrain.differential_drive.setSafetyEnabled(True)
