@@ -17,7 +17,6 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain.differential_drive.arcadeDrive(
             self.stick.getRawAxis(1),
             self.stick.getRawAxis(0),
-            True
         )
         if not self.arm.is_homed:
             self.arm.homeArm()
