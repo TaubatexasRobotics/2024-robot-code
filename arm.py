@@ -48,7 +48,7 @@ class Arm:
     def init(self) -> None:
         pass
 
-    def homeArm(self) -> None:
+    def home_arm(self) -> None:
         if not self.lenght_is_homed:
             self.home_lenght()
         if not self.angle_is_homed:
@@ -65,19 +65,19 @@ class Arm:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
 
-    def setAnglePosition(self, angle:float) -> None:
+    def set_angle_position(self, angle:float) -> None:
         self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
         return
 
-    def setLenghtPosition(self, lenght:float) -> None:
+    def set_lenght_position(self, lenght:float) -> None:
         self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
         return
     
-    def setAngleSpeed(self, speed:float) -> None:
+    def set_angle_speed(self, speed:float) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
     
-    def setLenghtSpeed(self, speed:float) -> None:
+    def set_lenght_speed(self, speed:float) -> None:
         self.lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
     

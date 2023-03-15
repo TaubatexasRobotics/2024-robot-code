@@ -19,12 +19,12 @@ class MyRobot(wpilib.TimedRobot):
             self.stick.getRawAxis(0),
         )
         if not self.arm.is_homed:
-            self.arm.homeArm()
+            self.arm.home_arm()
             return
         
     def autonomousPeriodic(self) -> None:
         if not self.arm.is_homed:
-            self.arm.homeArm()
+            self.arm.home_arm()
             return
             
 if __name__ == "__main__":
