@@ -1,4 +1,5 @@
 import rev
+import wpilib
 
 ARM_LENGHT_SPARK_ID = 50
 ARM_ANGLE_SPARK_ID = 51
@@ -30,18 +31,18 @@ class Arm:
         self.lenght_is_homed = False
         self.angle_is_homed = False
 
-        self.m_arm_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
-        self.m_arm_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.m_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.m_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
 
-        self.m_arm_angle_pid = self.m_arm_angle.getPIDController()
-        self.m_arm_angle_pid.setP(ARM_ANGLE["KP"])
-        self.m_arm_angle_pid.setI(ARM_ANGLE["KI"])
-        self.m_arm_angle_pid.setD(ARM_ANGLE["KD"])
+        self.angle_pid = self.m_angle.getPIDController()
+        self.angle_pid.setP(ARM_ANGLE["KP"])
+        self.angle_pid.setI(ARM_ANGLE["KI"])
+        self.angle_pid.setD(ARM_ANGLE["KD"])
 
-        self.m_arm_lenght_pid = self.m_arm_lenght.getPIDController()
-        self.m_arm_lenght_pid.setP(ARM_LENGHT["KP"])
-        self.m_arm_lenght_pid.setI(ARM_LENGHT["KI"])
-        self.m_arm_lenght_pid.setD(ARM_LENGHT["KD"])
+        self.lenght_pid = self.m_lenght.getPIDController()
+        self.lenght_pid.setP(ARM_LENGHT["KP"])
+        self.lenght_pid.setI(ARM_LENGHT["KI"])
+        self.lenght_pid.setD(ARM_LENGHT["KD"])
 
     # def init function with empty return type annotation
     def init(self) -> None:
@@ -57,26 +58,26 @@ class Arm:
         return
     
     def home_lenght(self, speed:float = LENGHT_HOMING_SPEED) -> None:
-        self.m_arm_angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
 
     def home_angle(self, speed:float = ANGLE_HOMING_SPEED) -> None:
-        self.m_arm_angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
 
     def setAnglePosition(self, angle:float) -> None:
-        self.m_arm_angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
+        self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
         return
 
     def setLenghtPosition(self, lenght:float) -> None:
-        self.m_arm_lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
+        self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
         return
     
     def setAngleSpeed(self, speed:float) -> None:
-        self.m_arm_angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
     
     def setLenghtSpeed(self, speed:float) -> None:
-        self.m_arm_lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+        self.lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
     
