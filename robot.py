@@ -10,15 +10,23 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain = Drivetrain()
         self.arm = Arm()
 
-    def teleopInit(self):
+    def teleopInit(self) -> None:
         self.drivetrain.differential_drive.setSafetyEnabled(True)
 
-    def teleopPeriodic(self):
+    def teleopPeriodic(self) -> None:
         self.drivetrain.differential_drive.arcadeDrive(
             self.stick.getRawAxis(1),
             self.stick.getRawAxis(0),
             True
         )
-    
+        if not self.arm.is_homed:
+            self.arm.homeArm()
+            return
+        
+    def autonomousPeriodic(self) -> None:
+        if not self.arm.is_homed:
+            self.arm.homeArm()
+            return
+            
 if __name__ == "__main__":
     wpilib.run(MyRobot)
