@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# those were created when running `python robot.py sim`
+networktables.json
+simgui-ds.json
+simgui-window.json
+simgui.json
