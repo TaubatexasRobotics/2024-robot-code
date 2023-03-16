@@ -1,10 +1,8 @@
 import rev
+import wpilib
 
 ARM_ANGLE_SPARK_ID = 51
 ARM_LENGHT_SPARK_ID = 50
-
-ANGLE_HOMING_SPEED = 0.10
-LENGHT_HOMING_SPEED = 0.10
 
 LIMIT_ANGLE_FORWARD = 0
 LIMIT_ANGLE_BACKWARD = 21.7
@@ -23,6 +21,12 @@ ARM_LENGHT= {
     "KI" : 0.0,
     "KD" : 0.1,   
 }
+
+ANGLE_SWITCH_PORT = 0
+LENGTH_SWITCH_PORT = 1
+
+ANGLE_HOMING_DUTY_CYCLE = 0.10
+LENGHT_HOMING_DUTY_CYCLE = 0.10
 
 class Arm:     
     def __init__(self):
@@ -46,9 +50,18 @@ class Arm:
         self.lenght_pid.setI(ARM_LENGHT["KI"])
         self.lenght_pid.setD(ARM_LENGHT["KD"])
 
+        self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
+        self.lenght_limit_switch = wpilib.DigitalInput(LENGTH_SWITCH_PORT)
+
     # def init function with empty return type annotation
     def init(self) -> None:
         pass
+
+    def angle_switch_is_pressed(self) -> bool:
+        return self.angle_limit_switch.get()
+    
+    def lenght_switch_is_pressed(self) -> bool:
+        return self.lenght_limit_switch.get()
 
     def home_arm(self) -> None:
         if not self.angle_is_homed:
@@ -58,12 +71,20 @@ class Arm:
         if self.angle_is_homed and self.lenght_is_homed:
             self.is_homed = True
 
-    def home_angle(self, speed:float = ANGLE_HOMING_SPEED) -> None:
-        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+    def home_angle(self, duty_cycle:float = ANGLE_HOMING_DUTY_CYCLE) -> None:
+        if self.angle_switch_is_pressed():
+            self.set_angle_duty_cycle(0)
+            self.angle_is_homed = True
+        else:
+            self.set_angle_duty_cycle(duty_cycle)
     
-    def home_lenght(self, speed:float = LENGHT_HOMING_SPEED) -> None:
-        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-    
+    def home_lenght(self, duty_cycle:float = LENGHT_HOMING_DUTY_CYCLE) -> None:
+        if self.lenght_switch_is_pressed():
+            self.set_lenght_duty_cycle(0)
+            self.lenght_is_homed = True
+        else:
+            self.set_lenght_duty_cycle(duty_cycle)
+
     def get_angle_position(self) -> float:
         return self.angle_encoder.getPosition()
     
@@ -76,11 +97,9 @@ class Arm:
     def set_lenght_position(self, lenght:float) -> None:
         self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
 
-    def set_angle_duty_cycle(self, speed:float) -> None:
-        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+    def set_angle_duty_cycle(self, duty_cycle:float) -> None:
+        self.angle_pid.setReference(duty_cycle, rev.CANSparkMax.ControlType.kDutyCycle)
 
-    def set_lenght_duty_cycle(self, speed:float) -> None:
-        self.lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-    
-    
+    def set_lenght_duty_cycle(self, duty_cycle:float) -> None:
+        self.lenght_pid.setReference(duty_cycle, rev.CANSparkMax.ControlType.kDutyCycle)
     
