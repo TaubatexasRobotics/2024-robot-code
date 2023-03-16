@@ -28,6 +28,15 @@ class MyRobot(wpilib.TimedRobot):
         if self.controller.toggle_intake():
             self.intake.toggle()
         
+        if self.controller.decrease_arm_lenght():
+            self.arm.decrease_arm_lenght()
+
+        if self.controller.increase_arm_lenght():
+            self.arm.increase_arm_lenght()
+
+        if self.controller.stop_arm_lenght():
+            self.arm.stop_arm_lenght()
+        
     def autonomousPeriodic(self) -> None:
         if not self.arm.is_homed:
             self.arm.home()

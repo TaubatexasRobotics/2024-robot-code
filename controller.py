@@ -50,9 +50,14 @@ class Controller:
 
         return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
     
-    def change_arm_angle(self):
-        return self.stick.getRawAxis(3)
+    def decrease_arm_lenght(self):
+        return self.stick.getRawButton(LB_BUTTON)
     
-    def change_arm_lenght(self):
-        return self.stick.getRawAxis(4)
-
+    def increase_arm_lenght(self):
+        return self.stick.getRawButton(RB_BUTTON)
+    
+    def stop_arm_lenght(self):
+        return self.stick.getRawButtonReleased(LB_BUTTON) or self.stick.getRawButtonReleased(RB_BUTTON)
+    
+    def move_angle(self):
+        return self.stick.getRawAxis(AXIS_RIGHT_Y)
