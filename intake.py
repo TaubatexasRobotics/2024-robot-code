@@ -21,7 +21,7 @@ class Intake:
     def close_intake(self):
         self.solenoid.set(wpilib.DoubleSolenoid.Value.kForward)
 
-    def toggle_intake(self):
+    def toggle(self):
         if self.is_open:
             self.close_intake()
         else:

@@ -19,18 +19,18 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain.differential_drive.arcadeDrive( *self.controller.get_drive() )
 
         if not self.arm.is_homed:
-            self.arm.home_arm()
+            self.arm.home()
             return
 
         if self.controller.toggle_compressor():
             self.intake.toggle_compressor()
         
         if self.controller.toggle_intake():
-            self.intake.toggle_intake()
+            self.intake.toggle()
         
     def autonomousPeriodic(self) -> None:
         if not self.arm.is_homed:
-            self.arm.home_arm()
+            self.arm.home()
             return
             
 if __name__ == "__main__":

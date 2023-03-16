@@ -63,7 +63,7 @@ class Arm:
     def lenght_switch_is_pressed(self) -> bool:
         return self.lenght_limit_switch.get()
 
-    def home_arm(self) -> None:
+    def home(self) -> None:
         if not self.angle_is_homed:
             self.home_angle()
         if not self.lenght_is_homed:
