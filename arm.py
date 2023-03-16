@@ -1,8 +1,8 @@
 import rev
 import wpilib
 
-ARM_LENGHT_SPARK_ID = 50
 ARM_ANGLE_SPARK_ID = 51
+ARM_LENGHT_SPARK_ID = 50
 
 ANGLE_HOMING_SPEED = 0.10
 LENGHT_HOMING_SPEED = 0.10
@@ -34,6 +34,9 @@ class Arm:
         self.m_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
         self.m_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
 
+        self.angle_encoder = self.m_angle.getEncoder()
+        self.lenght_encoder = self.m_angle.getEncoder()
+
         self.angle_pid = self.m_angle.getPIDController()
         self.angle_pid.setP(ARM_ANGLE["KP"])
         self.angle_pid.setI(ARM_ANGLE["KI"])
@@ -49,35 +52,42 @@ class Arm:
         pass
 
     def home_arm(self) -> None:
-        if not self.lenght_is_homed:
-            self.home_lenght()
         if not self.angle_is_homed:
             self.home_angle()
+        if not self.lenght_is_homed:
+            self.home_lenght()
         if self.angle_is_homed and self.lenght_is_homed:
             self.is_homed = True
-        return
-    
-    def home_lenght(self, speed:float = LENGHT_HOMING_SPEED) -> None:
-        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
 
     def home_angle(self, speed:float = ANGLE_HOMING_SPEED) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
-
-    def set_angle_position(self, angle:float) -> None:
-        self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
-        return
-
-    def set_lenght_position(self, lenght:float) -> None:
-        self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
-        return
     
-    def set_angle_speed(self, speed:float) -> None:
+    def home_lenght(self, speed:float = LENGHT_HOMING_SPEED) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
     
-    def set_lenght_speed(self, speed:float) -> None:
+    def get_angle_position(self) -> float:
+        return self.angle_encoder.getPosition()
+    
+    def get_length_position(self) -> float:
+        return self.lenght_encoder.getPosition()
+    
+    def set_angle_position(self, angle:float) -> None:
+        self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
+        return
+    
+    def set_lenght_position(self, lenght:float) -> None:
+        self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
+
+    def set_angle_duty_cycle(self, speed:float) -> None:
+        self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
+        return
+
+    def set_lenght_duty_cycle(self, speed:float) -> None:
         self.lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
         return
+    
+    
     
