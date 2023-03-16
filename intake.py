@@ -6,11 +6,11 @@ SOLENOID_REVERSE_CHANNEL = 1
 
 class Intake:
     def __init__(self):
+        self.is_open = False
+
         self.pcm = wpilib.PneumaticsControlModule(MODULE_ID)
         self.solenoid = self.pcm.makeDoubleSolenoid(SOLENOID_FORWARD_CHANNEL, SOLENOID_REVERSE_CHANNEL)
         self.compressor = self.pcm.makeCompressor()
-
-        self.isOpen = False
 
     def init(self):
         pass
@@ -22,11 +22,11 @@ class Intake:
         self.solenoid.set(wpilib.DoubleSolenoid.Value.kForward)
 
     def toggle_intake(self):
-        if self.isOpen:
+        if self.is_open:
             self.close_intake()
         else:
             self.open_intake()
-        self.isOpen = not self.isOpen
+        self.is_open = not self.is_open
 
     def enable_compressor(self):
         self.compressor.enableDigital()
