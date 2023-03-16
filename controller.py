@@ -44,7 +44,11 @@ class Controller:
         return False
     
     def get_drive(self):
-        return self.stick.getRawAxis(1), self.stick.getRawAxis(0)
+        rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
+        lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
+        combined_value = rt_value - lt_value
+
+        return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
     
     def change_arm_angle(self):
         return self.stick.getRawAxis(3)
