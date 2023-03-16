@@ -15,10 +15,10 @@ R3_BUTTON = 10
 
 AXIS_LEFT_X = 0
 AXIS_LEFT_Y = 1
-AXIS_RIGHT_X = 2
-AXIS_RIGHT_Y = 3
-AXIS_LEFT_TRIGGER = 4
-AXIS_RIGHT_TRIGGER = 5
+AXIS_RIGHT_X = 4
+AXIS_RIGHT_Y = 5
+AXIS_LEFT_TRIGGER = 2
+AXIS_RIGHT_TRIGGER = 3
 
 POV_UP = 0
 POV_UP_RIGHT = 45
@@ -46,7 +46,7 @@ class Controller:
     def get_drive(self):
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
-        combined_value = rt_value - lt_value
+        combined_value = lt_value - rt_value
 
         return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
     
