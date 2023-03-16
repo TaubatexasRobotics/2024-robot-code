@@ -1,5 +1,4 @@
 import rev
-import wpilib
 
 ARM_ANGLE_SPARK_ID = 51
 ARM_LENGHT_SPARK_ID = 50
@@ -35,7 +34,7 @@ class Arm:
         self.m_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
 
         self.angle_encoder = self.m_angle.getEncoder()
-        self.lenght_encoder = self.m_angle.getEncoder()
+        self.lenght_encoder = self.m_lenght.getEncoder()
 
         self.angle_pid = self.m_angle.getPIDController()
         self.angle_pid.setP(ARM_ANGLE["KP"])
@@ -58,15 +57,12 @@ class Arm:
             self.home_lenght()
         if self.angle_is_homed and self.lenght_is_homed:
             self.is_homed = True
-        return
 
     def home_angle(self, speed:float = ANGLE_HOMING_SPEED) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-        return
     
     def home_lenght(self, speed:float = LENGHT_HOMING_SPEED) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-        return
     
     def get_angle_position(self) -> float:
         return self.angle_encoder.getPosition()
@@ -76,18 +72,15 @@ class Arm:
     
     def set_angle_position(self, angle:float) -> None:
         self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
-        return
     
     def set_lenght_position(self, lenght:float) -> None:
         self.lenght_pid.setReference(lenght, rev.CANSparkMax.ControlType.kPosition)
 
     def set_angle_duty_cycle(self, speed:float) -> None:
         self.angle_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-        return
 
     def set_lenght_duty_cycle(self, speed:float) -> None:
         self.lenght_pid.setReference(speed, rev.CANSparkMax.ControlType.kDutyCycle)
-        return
     
     
     
