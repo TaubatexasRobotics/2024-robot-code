@@ -18,9 +18,9 @@ class MyRobot(wpilib.TimedRobot):
     def teleopPeriodic(self) -> None:
         self.drivetrain.differential_drive.arcadeDrive( *self.controller.get_drive() )
 
-        if not self.arm.is_homed:
-            self.arm.home()
-            return
+        # if not self.arm.is_homed:
+        #     self.arm.home()
+        #     return
 
         if self.controller.toggle_compressor():
             self.intake.toggle_compressor()
