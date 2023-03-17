@@ -6,6 +6,7 @@ from controller import Controller
 import wpilib
 
 AUTONOMOUS_SPEED = 0.5
+ONLY_DRIVETRAIN_MODE = True
 
 class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
@@ -21,9 +22,8 @@ class MyRobot(wpilib.TimedRobot):
     def teleopPeriodic(self) -> None:
         self.drivetrain.move( *self.controller.get_drive() )
 
-        # if not self.arm.is_homed:
-        #     self.arm.home()
-        #     return
+        if ONLY_DRIVETRAIN_MODE:
+            return
 
         if self.controller.toggle_compressor():
             self.intake.toggle_compressor()
@@ -66,6 +66,10 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
         elif self.timer.get() > 7:
             self.drivetrain.stop()
+
+        if ONLY_DRIVETRAIN_MODE:
+            return
+
             
     # def disabledPeriodic(self) -> None:
     #     self.arm.stop_arm_angle()
