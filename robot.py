@@ -56,6 +56,7 @@ class MyRobot(wpilib.TimedRobot):
         self.timer.start()
 
     def autonomousPeriodic(self) -> None:
+        self.arm.stop_arm_angle()
         # if not self.arm.is_homed:
         #     self.arm.home()
         #     return
