@@ -22,3 +22,16 @@ class Drivetrain:
 
     def init(self):
         pass
+
+    def move_straight(self, speed):
+        self.differential_drive.arcadeDrive(speed, 0)
+
+    def make_turn(self, speed):
+        self.differential_drive.arcadeDrive(0, speed)
+
+    def stop(self):
+        self.differential_drive.arcadeDrive(0, 0)
+
+    def move(self, speed, turn):
+        self.differential_drive.arcadeDrive(speed, turn)
+

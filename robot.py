@@ -19,7 +19,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain.differential_drive.setSafetyEnabled(True)
 
     def teleopPeriodic(self) -> None:
-        self.drivetrain.differential_drive.arcadeDrive( *self.controller.get_drive() )
+        self.drivetrain.move( *self.controller.get_drive() )
 
         # if not self.arm.is_homed:
         #     self.arm.home()
@@ -60,11 +60,11 @@ class MyRobot(wpilib.TimedRobot):
         #     self.arm.home()
         #     return
 
-        self.drivetrain.differential_drive.arcadeDrive(AUTONOMOUS_SPEED, 0)
+        self.drivetrain.move_straight(AUTONOMOUS_SPEED)
         if self.timer.get() > 5.0 and self.timer.get() < 7:
-            self.drivetrain.differential_drive.arcadeDrive(-AUTONOMOUS_SPEED, 0)
+            self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
         elif self.timer.get() > 7:
-            self.drivetrain.differential_drive.arcadeDrive(0, 0)
+            self.drivetrain.stop(0, 0)
             
 if __name__ == "__main__":
     wpilib.run(MyRobot)
