@@ -65,7 +65,11 @@ class MyRobot(wpilib.TimedRobot):
         if self.timer.get() > 5.0 and self.timer.get() < 7:
             self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
         elif self.timer.get() > 7:
-            self.drivetrain.stop(0, 0)
+            self.drivetrain.stop()
             
+    def disabledInit(self) -> None:
+        self.arm.stop_arm_angle()
+        self.arm.stop_arm_lenght()
+
 if __name__ == "__main__":
     wpilib.run(MyRobot)
