@@ -67,9 +67,10 @@ class MyRobot(wpilib.TimedRobot):
         elif self.timer.get() > 7:
             self.drivetrain.stop()
             
-    def disabledInit(self) -> None:
-        self.arm.stop_arm_angle()
-        self.arm.stop_arm_lenght()
+    # def disabledPeriodic(self) -> None:
+    #     self.arm.stop_arm_angle()
+    #     self.arm.stop_arm_lenght()
+    #     print(self.drivetrain.encoder_left.get())
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)

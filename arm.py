@@ -35,6 +35,7 @@ class Arm:
         self.angle_is_homed = False
 
         self.m_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
+        self.m_angle.setInverted(True) 
         self.m_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
         self.m_lenght.setInverted(True) 
 
@@ -51,8 +52,8 @@ class Arm:
         self.lenght_pid.setI(ARM_LENGHT["KI"])
         self.lenght_pid.setD(ARM_LENGHT["KD"])
 
-        self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
-        self.lenght_limit_switch = wpilib.DigitalInput(LENGTH_SWITCH_PORT)
+        # self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
+        # self.lenght_limit_switch = wpilib.DigitalInput(LENGTH_SWITCH_PORT)
 
     # def init function with empty return type annotation
     def init(self) -> None:

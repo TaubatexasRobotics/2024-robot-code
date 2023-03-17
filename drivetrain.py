@@ -20,6 +20,9 @@ class Drivetrain:
 
         self.differential_drive  = wpilib.drive.DifferentialDrive(self.m_left, self.m_right)
 
+        self.encoder_left = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k4X)
+        self.encoder_right = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k4X)
+
     def init(self):
         pass
 
