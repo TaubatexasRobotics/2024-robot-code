@@ -61,3 +61,12 @@ class Controller:
     
     def move_angle(self):
         return self.stick.getRawAxis(AXIS_RIGHT_Y)
+    
+    def decrease_arm_angle(self):
+        return self.stick.getRawButton(A_BUTTON)
+    
+    def increase_arm_angle(self):
+        return self.stick.getRawButton(Y_BUTTON)
+    
+    def stop_arm_angle(self):
+        return self.stick.getRawButtonReleased(A_BUTTON) or self.stick.getRawButtonReleased(Y_BUTTON)

@@ -25,8 +25,8 @@ ARM_LENGHT= {
 ANGLE_SWITCH_PORT = 0
 LENGTH_SWITCH_PORT = 1
 
-ANGLE_HOMING_DUTY_CYCLE = 0.05
-LENGHT_HOMING_DUTY_CYCLE = 0.05
+ANGLE_HOMING_DUTY_CYCLE = 0.17
+LENGHT_HOMING_DUTY_CYCLE = 0.15
 
 class Arm:     
     def __init__(self):
@@ -36,7 +36,7 @@ class Arm:
 
         self.m_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
         self.m_lenght = rev.CANSparkMax(ARM_LENGHT_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
-        self.m_lenght.setInverted(True)
+        self.m_lenght.setInverted(True) 
 
         self.angle_encoder = self.m_angle.getEncoder()
         self.lenght_encoder = self.m_lenght.getEncoder()
@@ -113,13 +113,13 @@ class Arm:
         self.lenght_pid.setReference(duty_cycle, rev.CANSparkMax.ControlType.kDutyCycle)
     
     def increase_arm_lenght(self) -> None:
-        self.set_lenght_duty_cycle(0.05)
+        self.set_lenght_duty_cycle(1.5 * LENGHT_HOMING_DUTY_CYCLE)
 
     def decrease_arm_lenght(self) -> None:
-        self.set_lenght_duty_cycle(-0.1)
+        self.set_lenght_duty_cycle(-LENGHT_HOMING_DUTY_CYCLE)
 
     def increase_arm_angle(self) -> None:
-        self.set_angle_duty_cycle(-LENGHT_HOMING_DUTY_CYCLE)
+        self.set_angle_duty_cycle(1.5 * ANGLE_HOMING_DUTY_CYCLE)
 
     def decrease_arm_angle(self) -> None:
         self.set_angle_duty_cycle(-ANGLE_HOMING_DUTY_CYCLE)
