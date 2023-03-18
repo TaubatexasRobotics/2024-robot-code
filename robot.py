@@ -6,6 +6,8 @@ from controller import Controller
 import wpilib
 
 AUTONOMOUS_SPEED = 0.5
+GAMEPIECE_SCORING_DURATION = 5
+AUTONOMOUS_MOVEMENT_DURATION = 8
 ONLY_DRIVETRAIN_MODE = True
 
 class MyRobot(wpilib.TimedRobot):
@@ -63,15 +65,14 @@ class MyRobot(wpilib.TimedRobot):
         #     return
 
         self.drivetrain.move_straight(AUTONOMOUS_SPEED)
-        if self.timer.get() > 5.0 and self.timer.get() < 7:
+        if self.timer.get() > 5.0 and self.timer.get() < AUTONOMOUS_MOVEMENT_DURATION:
             self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
-        elif self.timer.get() > 7:
+        elif self.timer.get() > AUTONOMOUS_MOVEMENT_DURATION:
             self.drivetrain.stop()
 
         if ONLY_DRIVETRAIN_MODE:
             return
 
-            
     # def disabledPeriodic(self) -> None:
     #     self.arm.stop_arm_angle()
     #     self.arm.stop_arm_lenght()
