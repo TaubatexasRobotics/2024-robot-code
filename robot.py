@@ -23,6 +23,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain.move( *self.controller.get_drive() )
 
         if ONLY_DRIVETRAIN_MODE:
+            self.intake.compressor.disable()
             return
 
         if self.controller.toggle_compressor():
