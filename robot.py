@@ -2,10 +2,13 @@ from drivetrain import Drivetrain
 from arm import Arm
 from intake import Intake
 from controller import Controller
+from dashboard import Dashboard
 
 import wpilib
 
-AUTONOMOUS_SPEED = 0.5
+AUTONOMOUS_SPEED = 0.4
+AUTONOMOUS_DISTANCE = 1
+
 GAMEPIECE_SCORING_DURATION = 5
 AUTONOMOUS_MOVEMENT_DURATION = 8
 ONLY_DRIVETRAIN_MODE = True
@@ -39,6 +42,7 @@ class MyRobot(wpilib.TimedRobot):
 
     def teleopPeriodic(self) -> None:
         self.drivetrain.move( *self.controller.get_drive() )
+        self.intake.compressor.disable()
 
         if ONLY_DRIVETRAIN_MODE:
             self.intake.compressor.disable()
@@ -69,6 +73,7 @@ class MyRobot(wpilib.TimedRobot):
             self.arm.stop_arm_angle()
         
     def autonomousInit(self) -> None:
+        self.intake.compressor.disable()
         self.drivetrain.differential_drive.setSafetyEnabled(True)
         self.drivetrain.differential_drive.setExpiration(0.1)
         self.timer.reset()
@@ -80,11 +85,8 @@ class MyRobot(wpilib.TimedRobot):
         #     self.arm.home()
         #     return
 
-        self.drivetrain.move_straight(AUTONOMOUS_SPEED)
-        if self.timer.get() > 5.0 and self.timer.get() < AUTONOMOUS_MOVEMENT_DURATION:
-            self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
-        elif self.timer.get() > AUTONOMOUS_MOVEMENT_DURATION:
-            self.drivetrain.stop()
+        if self.drivetrain.get_distance() < AUTONOMOUS_DISTANCE:
+            self.drivetrain.move_straight(-AUTONOMOUS_SPEED)        
 
         if ONLY_DRIVETRAIN_MODE:
             return
