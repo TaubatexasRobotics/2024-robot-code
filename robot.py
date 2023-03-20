@@ -22,6 +22,7 @@ class MyRobot(wpilib.TimedRobot):
         self.timer = wpilib.Timer()
 
         self.smartdashboard = wpilib.SmartDashboard
+        self.field = wpilib.Field2d()
 
     #update the dashboard
     def robotPeriodic(self) -> None:
@@ -38,6 +39,7 @@ class MyRobot(wpilib.TimedRobot):
         self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
         
         self.smartdashboard.putData("NavX", self.drivetrain.navx)
+        self.smartdashboard.putData("Field", self.field)
         
     def teleopInit(self) -> None:
         self.drivetrain.differential_drive.setSafetyEnabled(True)
