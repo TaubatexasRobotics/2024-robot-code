@@ -18,6 +18,22 @@ class MyRobot(wpilib.TimedRobot):
         self.intake = Intake()
         self.timer = wpilib.Timer()
 
+        self.smartdashboard = wpilib.SmartDashboard
+
+    #update the dashboard
+    def robotPeriodic(self) -> None:
+        self.smartdashboard.putNumber("Angle", self.arm.get_angle_position())
+        self.smartdashboard.putNumber("Lenght", self.arm.get_length_position())
+                
+        self.smartdashboard.putNumber("Left Pulses", self.drivetrain.get_left_encoder_pulses())
+        self.smartdashboard.putNumber("Left Distance", self.drivetrain.get_left_distance())
+
+        self.smartdashboard.putNumber("Right Pulses", self.drivetrain.get_right_encoder_pulses())
+        self.smartdashboard.putNumber("Right Distance", self.drivetrain.get_right_distance())
+        self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
+        
+        self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
+
     def teleopInit(self) -> None:
         self.drivetrain.differential_drive.setSafetyEnabled(True)
 
@@ -73,10 +89,6 @@ class MyRobot(wpilib.TimedRobot):
         if ONLY_DRIVETRAIN_MODE:
             return
 
-    # def disabledPeriodic(self) -> None:
-    #     self.arm.stop_arm_angle()
-    #     self.arm.stop_arm_lenght()
-    #     print(self.drivetrain.encoder_left.get())
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
