@@ -25,18 +25,11 @@ class Drivetrain:
         self.encoder_left = wpilib.Encoder(6, 7, True, wpilib.Encoder.EncodingType.k4X)
         self.encoder_right = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k4X)
 
-        self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
-        self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
-
-    def init(self):
         self.encoder_left.reset()
         self.encoder_right.reset()
 
-        PULSES_PER_TURN = 600
-        METERS_PER_TURN = 0.1524
-        meter_per_pulse = METERS_PER_TURN / PULSES_PER_TURN
-        self.encoder_left.setDistancePerPulse(meter_per_pulse)
-        self.encoder_right.setDistancePerPulse(meter_per_pulse)
+        self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
+        self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
 
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
