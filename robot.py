@@ -36,7 +36,9 @@ class MyRobot(wpilib.TimedRobot):
         self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
         
         self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
-
+        
+        self.smartdashboard.putData("NavX", self.drivetrain.navx)
+        
     def teleopInit(self) -> None:
         self.drivetrain.differential_drive.setSafetyEnabled(True)
 

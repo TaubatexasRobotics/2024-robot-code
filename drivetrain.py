@@ -1,5 +1,8 @@
 import wpilib 
 import wpilib.drive
+import wpimath.controller
+from navx import AHRS
+
 import ctre
 
 C_LEFT_BACK = 1
@@ -27,6 +30,8 @@ class Drivetrain:
 
         self.encoder_left.reset()
         self.encoder_right.reset()
+        
+        self.navx = AHRS.create_spi()
 
         self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
         self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
