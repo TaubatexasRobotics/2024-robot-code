@@ -38,12 +38,15 @@ class MyRobot(wpilib.TimedRobot):
         self.smartdashboard.putNumber("Angle", self.arm.get_angle_position())
         self.smartdashboard.putNumber("Lenght", self.arm.get_length_position())
                 
+        left_voltage, right_voltage = self.drivetrain.get_motors_voltage()
         self.smartdashboard.putNumber("Left Pulses", left_distance)
         self.smartdashboard.putNumber("Left Distance", right_distance)
+        self.smartdashboard.putNumber("Left Volts", left_voltage)
 
         self.smartdashboard.putNumber("Right Pulses", self.drivetrain.get_right_encoder_pulses())
         self.smartdashboard.putNumber("Right Distance", self.drivetrain.get_right_distance())
         self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
+        self.smartdashboard.putNumber("Right Volts", right_voltage)
         
         self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
         self.smartdashboard.putNumber("Arfagem", self.drivetrain.get_pitch())

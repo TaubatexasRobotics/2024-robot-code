@@ -85,4 +85,14 @@ class Drivetrain:
     
     def get_pitch(self):
         return self.navx.getPitch()
+    
+    def tank_drive_volts(self, leftVolts, rightVolts):
+        self.m_left.setVoltage(leftVolts)
+        self.m_right.setVoltage(-rightVolts)
+        self.differential_drive.feed()
+    
+    def get_motors_voltage(self):
+        motor_left_v = (self.m_left_back.getMotorOutputVoltage() + self.m_left_front.getMotorOutputVoltage())/2
+        motor_right_v = (self.m_right_back.getMotorOutputVoltage() + self.m_right_front.getMotorOutputVoltage())/2
+        return motor_left_v, motor_right_v
 
