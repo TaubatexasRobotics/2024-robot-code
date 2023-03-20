@@ -7,6 +7,8 @@ C_LEFT_FRONT = 2
 C_RIGHT_FRONT = 3
 C_RIGHT_BACK = 4
 
+ENCODER_DISTANCE_PER_PULSE = 3.05/3925
+
 class Drivetrain:
     def __init__(self):
         self.m_left_back = ctre.WPI_VictorSPX(C_LEFT_BACK)
@@ -20,11 +22,21 @@ class Drivetrain:
 
         self.differential_drive  = wpilib.drive.DifferentialDrive(self.m_left, self.m_right)
 
-        self.encoder_left = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k4X)
+        self.encoder_left = wpilib.Encoder(6, 7, True, wpilib.Encoder.EncodingType.k4X)
         self.encoder_right = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k4X)
 
+        self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
+        self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
+
     def init(self):
-        pass
+        self.encoder_left.reset()
+        self.encoder_right.reset()
+
+        PULSES_PER_TURN = 600
+        METERS_PER_TURN = 0.1524
+        meter_per_pulse = METERS_PER_TURN / PULSES_PER_TURN
+        self.encoder_left.setDistancePerPulse(meter_per_pulse)
+        self.encoder_right.setDistancePerPulse(meter_per_pulse)
 
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
@@ -37,4 +49,23 @@ class Drivetrain:
 
     def move(self, speed, turn):
         self.differential_drive.arcadeDrive(speed, turn)
+
+    def reset_encoders(self):
+        self.encoder_left.reset()
+        self.encoder_right.reset()
+
+    def get_left_encoder_pulses(self):
+        return self.encoder_left.get()
+    
+    def get_right_encoder_pulses(self):
+        return self.encoder_right.get()
+
+    def get_distance(self):
+        return (self.encoder_left.getDistance() + self.encoder_right.getDistance()) / 2
+    
+    def get_left_distance(self):
+        return self.encoder_left.getDistance()
+    
+    def get_right_distance(self):
+        return self.encoder_right.getDistance()
 
