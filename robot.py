@@ -23,22 +23,35 @@ class MyRobot(wpilib.TimedRobot):
 
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
-
+        
+        leftPosition = self.drivetrain.get_left_distance()
+        rightPosition = self.drivetrain.get_right_distance()
+        
+        self.arm.stop_arm_angle()
+        self.arm.stop_arm_lenght()
+        
     #update the dashboard
     def robotPeriodic(self) -> None:
+        left_distance = self.drivetrain.get_left_distance()
+        right_distance = self.drivetrain.get_right_distance()
+        
         self.smartdashboard.putNumber("Angle", self.arm.get_angle_position())
         self.smartdashboard.putNumber("Lenght", self.arm.get_length_position())
                 
-        self.smartdashboard.putNumber("Left Pulses", self.drivetrain.get_left_encoder_pulses())
-        self.smartdashboard.putNumber("Left Distance", self.drivetrain.get_left_distance())
+        self.smartdashboard.putNumber("Left Pulses", left_distance)
+        self.smartdashboard.putNumber("Left Distance", right_distance)
 
         self.smartdashboard.putNumber("Right Pulses", self.drivetrain.get_right_encoder_pulses())
         self.smartdashboard.putNumber("Right Distance", self.drivetrain.get_right_distance())
         self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
         
         self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
+        self.smartdashboard.putNumber("Arfagem", self.drivetrain.get_pitch())
         
         self.smartdashboard.putData("NavX", self.drivetrain.navx)
+        
+        self.drivetrain.update_odometry()
+        self.field.setRobotPose(self.drivetrain.get_pose())
         self.smartdashboard.putData("Field", self.field)
         
     def teleopInit(self) -> None:

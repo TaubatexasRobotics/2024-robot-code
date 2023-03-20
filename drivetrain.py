@@ -1,6 +1,9 @@
 import wpilib 
 import wpilib.drive
 import wpimath.controller
+import wpimath.geometry
+import wpimath.kinematics
+
 from navx import AHRS
 
 import ctre
@@ -11,6 +14,7 @@ C_RIGHT_FRONT = 3
 C_RIGHT_BACK = 4
 
 ENCODER_DISTANCE_PER_PULSE = 3.05/3925
+INITIAL_POSE = (0, 0, 0) # (x, y, theta)
 
 class Drivetrain:
     def __init__(self):
@@ -32,10 +36,15 @@ class Drivetrain:
         self.encoder_right.reset()
         
         self.navx = AHRS.create_spi()
+        self.navx.reset()
 
         self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
         self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
-
+        
+        rotation = wpimath.geometry.Rotation2d.fromDegrees(180 - self.navx.getAngle())
+        initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
+        self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
+        
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
 
@@ -66,4 +75,14 @@ class Drivetrain:
     
     def get_right_distance(self):
         return self.encoder_right.getDistance()
+    
+    def update_odometry(self):
+        rotation = wpimath.geometry.Rotation2d.fromDegrees(180 - self.navx.getAngle())
+        self.odometry.update(rotation, self.encoder_left.getDistance(), self.encoder_right.getDistance())
+        
+    def get_pose(self):
+        return self.odometry.getPose()
+    
+    def get_pitch(self):
+        return self.navx.getPitch()
 
