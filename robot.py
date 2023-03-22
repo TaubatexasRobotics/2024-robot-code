@@ -2,7 +2,6 @@ from drivetrain import Drivetrain
 from arm import Arm
 from intake import Intake
 from controller import Controller
-from dashboard import Dashboard
 
 import wpilib
 
@@ -59,13 +58,14 @@ class MyRobot(wpilib.TimedRobot):
         
     def teleopInit(self) -> None:
         self.drivetrain.differential_drive.setSafetyEnabled(True)
+        
+        if ONLY_DRIVETRAIN_MODE:
+            self.intake.compressor.disable()
 
     def teleopPeriodic(self) -> None:
         self.drivetrain.move( *self.controller.get_drive() )
-        self.intake.compressor.disable()
 
         if ONLY_DRIVETRAIN_MODE:
-            self.intake.compressor.disable()
             return
 
         if self.controller.toggle_compressor():
@@ -98,6 +98,9 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain.differential_drive.setExpiration(0.1)
         self.timer.reset()
         self.timer.start()
+        
+        if ONLY_DRIVETRAIN_MODE:
+            self.intake.compressor.disable()
 
     def autonomousPeriodic(self) -> None:
         self.arm.stop_arm_angle()
