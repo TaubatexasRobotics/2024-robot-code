@@ -55,6 +55,7 @@ class MyRobot(wpilib.TimedRobot):
             self.smartdashboard.putNumber("Pitch", self.drivetrain.get_pitch())
             
             self.smartdashboard.putData("NavX", self.drivetrain.navx)
+            self.smartdashboard.putData("PID", self.drivetrain.reference_pid_controller)
             
             self.drivetrain.update_odometry()
             self.field.setRobotPose(self.drivetrain.get_pose())

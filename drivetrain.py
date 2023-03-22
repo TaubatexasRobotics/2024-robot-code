@@ -41,6 +41,10 @@ class Drivetrain:
         self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
         self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
         
+        self.reference_pid_controller = wpimath.controller.PIDController(0, 0, 0)
+        self.left_pid_controller = wpimath.controller.PIDController(0, 0, 0)
+        self.right_pid_controller = wpimath.controller.PIDController(0, 0, 0)
+        
         rotation = wpimath.geometry.Rotation2d.fromDegrees(180 - self.navx.getAngle())
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
@@ -86,7 +90,7 @@ class Drivetrain:
     def get_pitch(self):
         return self.navx.getPitch()
     
-    def tank_drive_volts(self, leftVolts, rightVolts):
+    def set_tank_drive_volts(self, leftVolts, rightVolts):
         self.m_left.setVoltage(leftVolts)
         self.m_right.setVoltage(-rightVolts)
         self.differential_drive.feed()
@@ -95,4 +99,22 @@ class Drivetrain:
         motor_left_v = (self.m_left_back.getMotorOutputVoltage() + self.m_left_front.getMotorOutputVoltage())/2
         motor_right_v = (self.m_right_back.getMotorOutputVoltage() + self.m_right_front.getMotorOutputVoltage())/2
         return motor_left_v, motor_right_v
-
+    
+    def update_pid_constants(self):
+        constants = (
+            self.reference_pid_controller.getP(),
+            self.reference_pid_controller.getI(),
+            self.reference_pid_controller.getD()
+        )
+        self.left_pid_controller.setPID(*constants)
+        self.right_pid_controller.setPID(*constants)
+    
+    #method to lock the robot in place using pid controller
+    def lock(self, left_setpoint, right_setpoint):
+        self.update_pid_constants()
+        
+        left_output = self.left_pid_controller.calculate(left_setpoint, self.encoder_left.getDistance())
+        right_output = self.right_pid_controller.calculate(right_setpoint, self.encoder_right.getDistance())
+        
+        self.set_tank_drive_volts(left_output, right_output)
+        
