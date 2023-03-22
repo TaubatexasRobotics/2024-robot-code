@@ -27,7 +27,7 @@ class MyRobot(wpilib.TimedRobot):
         rightPosition = self.drivetrain.get_right_distance()
         
         self.arm.stop_arm_angle()
-        self.arm.stop_arm_lenght()
+        self.arm.stop_arm_length()
         
     #update the dashboard
     def robotPeriodic(self) -> None:
@@ -35,7 +35,7 @@ class MyRobot(wpilib.TimedRobot):
         right_distance = self.drivetrain.get_right_distance()
         
         self.smartdashboard.putNumber("Angle", self.arm.get_angle_position())
-        self.smartdashboard.putNumber("Lenght", self.arm.get_length_position())
+        self.smartdashboard.putNumber("Length", self.arm.get_length_position())
                 
         left_voltage, right_voltage = self.drivetrain.get_motors_voltage()
         self.smartdashboard.putNumber("Left Pulses", left_distance)
@@ -48,7 +48,7 @@ class MyRobot(wpilib.TimedRobot):
         self.smartdashboard.putNumber("Right Volts", right_voltage)
         
         self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
-        self.smartdashboard.putNumber("Arfagem", self.drivetrain.get_pitch())
+        self.smartdashboard.putNumber("Pitch", self.drivetrain.get_pitch())
         
         self.smartdashboard.putData("NavX", self.drivetrain.navx)
         
@@ -74,14 +74,14 @@ class MyRobot(wpilib.TimedRobot):
         if self.controller.toggle_intake():
             self.intake.toggle()
         
-        if self.controller.decrease_arm_lenght():
-            self.arm.decrease_arm_lenght()
+        if self.controller.decrease_arm_length():
+            self.arm.decrease_arm_length()
 
-        if self.controller.increase_arm_lenght():
-            self.arm.increase_arm_lenght()
+        if self.controller.increase_arm_length():
+            self.arm.increase_arm_length()
 
-        if self.controller.stop_arm_lenght():
-            self.arm.stop_arm_lenght()
+        if self.controller.stop_arm_length():
+            self.arm.stop_arm_length()
 
         if self.controller.decrease_arm_angle():
             self.arm.decrease_arm_angle()
