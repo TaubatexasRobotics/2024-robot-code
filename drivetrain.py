@@ -52,14 +52,14 @@ class Drivetrain:
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
 
-    def make_turn(self, speed):
-        self.differential_drive.arcadeDrive(0, speed)
+    def make_turn(self, turn_speed):
+        self.differential_drive.arcadeDrive(0, turn_speed)
 
     def stop(self):
         self.differential_drive.arcadeDrive(0, 0)
 
-    def move(self, speed, turn):
-        self.differential_drive.arcadeDrive(speed, turn)
+    def move(self, speed, turn_speed):
+        self.differential_drive.arcadeDrive(speed, turn_speed)
 
     def reset_encoders(self):
         self.encoder_left.reset()
