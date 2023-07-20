@@ -13,6 +13,9 @@ C_RIGHT_BACK = 2
 C_LEFT_FRONT = 3
 C_LEFT_BACK = 4
 
+LEFT_ENCODER = (0, 1)
+RIGHT_ENCODER = (2, 3)
+
 ENCODER_DISTANCE_PER_PULSE = 3.05/3925
 INITIAL_POSE = (0, 0, 0) # (x, y, theta)
 
@@ -29,8 +32,8 @@ class Drivetrain:
 
         self.differential_drive  = wpilib.drive.DifferentialDrive(self.m_left, self.m_right)
 
-        self.encoder_left = wpilib.Encoder(6, 7, True, wpilib.Encoder.EncodingType.k4X)
-        self.encoder_right = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k4X)
+        self.encoder_left = wpilib.Encoder(*LEFT_ENCODER, True, wpilib.Encoder.EncodingType.k4X)
+        self.encoder_right = wpilib.Encoder(*RIGHT_ENCODER, False, wpilib.Encoder.EncodingType.k4X)
 
         self.encoder_left.reset()
         self.encoder_right.reset()
