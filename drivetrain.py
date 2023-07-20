@@ -8,10 +8,10 @@ from navx import AHRS
 
 import ctre
 
-C_LEFT_BACK = 1
-C_LEFT_FRONT = 2
-C_RIGHT_FRONT = 3
-C_RIGHT_BACK = 4
+C_RIGHT_FRONT = 1
+C_RIGHT_BACK = 2
+C_LEFT_FRONT = 3
+C_LEFT_BACK = 4
 
 ENCODER_DISTANCE_PER_PULSE = 3.05/3925
 INITIAL_POSE = (0, 0, 0) # (x, y, theta)
