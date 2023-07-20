@@ -22,9 +22,9 @@ ARM_LENGTH_PID = {
     "KD" : 0.1,   
 }
 
-ANGLE_SWITCH_PORT = 0
-LENGTH_SWITCH_PORT = 1
+# ANGLE_SWITCH_PORT = 0
 
+# LENGTH_SWITCH_PORT = 1
 ANGLE_HOMING_DUTY_CYCLE = 0.17
 LENGTH_HOMING_DUTY_CYCLE = 0.15
 
@@ -52,10 +52,9 @@ class Arm:
         self.length_pid.setI(ARM_LENGTH_PID["KI"])
         self.length_pid.setD(ARM_LENGTH_PID["KD"])
 
-        self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
-        self.length_limit_switch = wpilib.DigitalInput(LENGTH_SWITCH_PORT)
+        # self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
+        # self.length_limit_switch = wpilib.DigitalInput(LENGTH_SWITCH_PORT)
 
-    # def init function with empty return type annotation
     def init(self) -> None:
         pass
 
