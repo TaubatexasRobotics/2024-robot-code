@@ -51,7 +51,6 @@ class MyRobot(wpilib.TimedRobot):
             self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
             self.smartdashboard.putNumber("Right Volts", right_voltage)
             
-            self.smartdashboard.putBoolean("Compressor", self.intake.compressor.isEnabled())
             self.smartdashboard.putNumber("Pitch", self.drivetrain.get_pitch())
             
             self.smartdashboard.putData("NavX", self.drivetrain.navx)
