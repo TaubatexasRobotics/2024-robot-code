@@ -4,7 +4,7 @@ MODULE_ID = 0
 SOLENOID_FORWARD_CHANNEL = 0
 SOLENOID_REVERSE_CHANNEL = 1
 
-class Intake:
+class PneumaticIntake:
     def __init__(self):
         self.is_open = False
 

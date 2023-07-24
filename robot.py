@@ -1,6 +1,6 @@
 from drivetrain import Drivetrain
 from arm import Arm
-from intake import Intake
+from pneumatic_intake import PneumaticIntake as Intake
 from controller import Controller
 
 import wpilib
