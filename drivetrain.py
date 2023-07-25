@@ -48,7 +48,7 @@ class Drivetrain:
         self.left_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         self.right_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         
-        rotation = wpimath.geometry.Rotation2d.fromDegrees(180 - self.navx.getAngle())
+        rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
         
@@ -84,7 +84,7 @@ class Drivetrain:
         return self.encoder_right.getDistance()
     
     def update_odometry(self):
-        rotation = wpimath.geometry.Rotation2d.fromDegrees(180 - self.navx.getAngle())
+        rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
         self.odometry.update(rotation, self.encoder_left.getDistance(), self.encoder_right.getDistance())
         
     def get_pose(self):
