@@ -4,6 +4,7 @@ from pneumatic_intake import PneumaticIntake as Intake
 from controller import Controller
 
 import wpilib
+import top_intake
 
 AUTONOMOUS_SPEED = 0.4
 AUTONOMOUS_DISTANCE = 1
