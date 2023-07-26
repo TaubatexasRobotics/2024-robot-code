@@ -2,6 +2,7 @@ from drivetrain import Drivetrain
 from arm import Arm
 from pneumatic_intake import PneumaticIntake as Intake
 from controller import Controller
+from top_intake import TopIntake
 
 import wpilib
 import top_intake
