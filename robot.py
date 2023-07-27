@@ -100,6 +100,13 @@ class MyRobot(wpilib.TimedRobot):
 
             if self.controller.stop_arm_angle():
                 self.arm.stop_arm_angle()
+            
+            if self.controller.catch_gamepiece():
+                self.top_intake.catch_gamepiece()
+
+            if self.controller.release_gamepiece():
+                self.top_intake.release_gamepiece()
+
         except BaseException as e: 
             log_exception(e)
         

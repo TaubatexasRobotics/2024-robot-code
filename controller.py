@@ -32,11 +32,6 @@ POV_UP_LEFT = 315
 class Controller:
     def __init__(self):
         self.stick = wpilib.Joystick(JOYSTICK_PORT)
-
-    def toggle_intake(self):
-        if self.stick.getRawButtonPressed(B_BUTTON) == True:
-            return True
-        return False
     
     def toggle_compressor(self):
         if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
@@ -70,3 +65,10 @@ class Controller:
     
     def stop_arm_angle(self):
         return self.stick.getRawButtonReleased(A_BUTTON) or self.stick.getRawButtonReleased(Y_BUTTON)
+    
+    def catch_gamepiece(self):
+        return self.stick.getRawButton(B_BUTTON)
+    
+    def release_gamepiece(self):
+        return self.stick.getRawButton(X_BUTTON)
+

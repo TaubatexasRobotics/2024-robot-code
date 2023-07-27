@@ -15,6 +15,6 @@ class TopIntake:
       self.m_upper.set(-SPARK_FORCE)
       self.m_lower.set(-REDLINE_FORCE)
 
-   def catch_gamepiece(self) -> None:
+   def release_gamepiece(self) -> None:
       self.m_upper.set(SPARK_FORCE)
       self.m_lower.set(REDLINE_FORCE)
