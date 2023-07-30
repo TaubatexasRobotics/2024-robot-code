@@ -5,9 +5,9 @@ ARM_ANGLE_SPARK_ID = 50
 ARM_LENGTH_SPARK_ID = 51
 
 LIMIT_ANGLE_FORWARD = 0
-LIMIT_ANGLE_BACKWARD = 21.7
+LIMIT_ANGLE_BACKWARD = 17
 
-LIMIT_LENGTH_FORWARD = 4.97
+LIMIT_LENGTH_FORWARD = -3.6
 LIMIT_LENGTH_BACKWARD = 0
 
 ARM_ANGLE_PID = {
@@ -35,9 +35,9 @@ class Arm:
         self.angle_is_homed = False
 
         self.m_angle = rev.CANSparkMax(ARM_ANGLE_SPARK_ID, rev.CANSparkMaxLowLevel.MotorType.kBrushless)
-        self.m_angle.setInverted(True) 
+        # self.m_angle.setInverted(True) 
         self.m_length = rev.CANSparkMax(ARM_LENGTH_SPARK_ID,  rev.CANSparkMaxLowLevel.MotorType.kBrushless)
-        self.m_length.setInverted(True) 
+        # self.m_length.setInverted(True) 
 
         self.angle_encoder = self.m_angle.getEncoder()
         self.length_encoder = self.m_length.getEncoder()

@@ -10,7 +10,7 @@ AUTONOMOUS_DISTANCE = 1
 
 GAMEPIECE_SCORING_DURATION = 5
 AUTONOMOUS_MOVEMENT_DURATION = 8
-ONLY_DRIVETRAIN_MODE = True
+ONLY_DRIVETRAIN_MODE = False
 
 def log_exception(e):
     wpilib.DataLogManager.log(repr(e))
@@ -79,31 +79,34 @@ class MyRobot(wpilib.TimedRobot):
             if ONLY_DRIVETRAIN_MODE:
                 return
 
-            if self.controller.toggle_compressor():
-                self.intake.toggle_compressor()
-            if self.controller.toggle_intake():
-                self.intake.toggle()
             if self.controller.decrease_arm_length():
                 self.arm.decrease_arm_length()
 
             if self.controller.increase_arm_length():
                 self.arm.increase_arm_length()
+
             if self.controller.stop_arm_length():
                 self.arm.stop_arm_length()
 
+
             if self.controller.decrease_arm_angle():
                 self.arm.decrease_arm_angle()
+
             if self.controller.increase_arm_angle():
                 self.arm.increase_arm_angle()
 
             if self.controller.stop_arm_angle():
                 self.arm.stop_arm_angle()
-            
+
+
             if self.controller.catch_gamepiece():
-                self.top_intake.catch_gamepiece()
+                self.intake.catch_gamepiece()
 
             if self.controller.release_gamepiece():
-                self.top_intake.release_gamepiece()
+                self.intake.release_gamepiece()
+
+            if self.controller.stop_intake():
+                self.intake.stop()
 
         except BaseException as e: 
             log_exception(e)

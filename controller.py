@@ -71,4 +71,7 @@ class Controller:
     
     def release_gamepiece(self):
         return self.stick.getRawButton(X_BUTTON)
+    
+    def stop_intake(self):
+        return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)
 
