@@ -1,5 +1,5 @@
 import rev
-import wpilib
+import ctre
 
 TOP_MOTOR_SPARK_ID = 1
 BOTTOM_MOTOR_REDLINE = 2 
@@ -18,3 +18,4 @@ class TopIntake:
    def release_gamepiece(self) -> None:
       self.m_upper.set(SPARK_FORCE)
       self.m_lower.set(REDLINE_FORCE)
+      
