@@ -1,6 +1,6 @@
 from drivetrain import Drivetrain
 from arm import Arm
-from top_intake import TopIntake as Intake
+from tweezer_intake import TweezerIntake as Intake
 from controller import Controller
 
 import wpilib

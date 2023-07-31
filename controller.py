@@ -17,8 +17,10 @@ AXIS_LEFT_X = 0
 AXIS_LEFT_Y = 1
 AXIS_RIGHT_X = 4
 AXIS_RIGHT_Y = 5
+# AXIS_LEFT_TRIGGER = 2 - XBOX CONTROLLER
+# AXIS_RIGHT_TRIGGER = 3 - XBOX CONTROLLER
 AXIS_LEFT_TRIGGER = 2
-AXIS_RIGHT_TRIGGER = 3
+AXIS_RIGHT_TRIGGER = 5
 
 POV_UP = 0
 POV_UP_RIGHT = 45
@@ -38,12 +40,12 @@ class Controller:
             return True
         return False
     
-    def get_drive(self):
+    def get_drive(self) -> (float, float):
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
         combined_value = lt_value - rt_value
 
-        return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
+        return self.stick.getRawAxis(5), self.stick.getRawAxis(AXIS_LEFT_X)
     
     def decrease_arm_length(self):
         return self.stick.getRawButton(LB_BUTTON)
