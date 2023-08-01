@@ -118,12 +118,12 @@ class MyRobot(wpilib.TimedRobot):
                 self.intake.stop()
 
             if self.set_angle_and_lenght_position_mid():
-                self.arm.set_angle_position(midAngle)
-                self.arm.set_length_position(midLenght)
+                self.arm.set_angle_position(self.midAngle)
+                self.arm.set_length_position(self.midLenght)
 
             if self.set_angle_and_lenght_position_comunity():
-                self.arm.set_angle_position(comunityAngle)
-                self.arm.set_length_position(comunityLenght)
+                self.arm.set_angle_position(self.comunityAngle)
+                self.arm.set_length_position(self.comunityLenght)
 
         except BaseException as e: 
             log_exception(e)
