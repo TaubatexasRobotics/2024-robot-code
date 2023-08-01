@@ -30,6 +30,8 @@ ARM_LENGTH_PID = {
 ANGLE_HOMING_DUTY_CYCLE = 0.17
 LENGTH_HOMING_DUTY_CYCLE = 0.15
 
+LENGHT_STEP_SIZE = 0.9
+
 class Arm:     
     def __init__(self):
         self.is_homed = False
@@ -118,11 +120,11 @@ class Arm:
         self.set_length_duty_cycle(1.5 * LENGTH_HOMING_DUTY_CYCLE)
 
     def decrease_arm_length(self) -> None:
-        self.set_length_duty_cycle(-LENGTH_HOMING_DUTY_CYCLE)
+        self.set_length_duty_cycle(0.8 * -LENGTH_HOMING_DUTY_CYCLE)
 
     def increase_arm_angle(self) -> None:
         self.set_angle_duty_cycle(1.5 * ANGLE_HOMING_DUTY_CYCLE)
 
     def decrease_arm_angle(self) -> None:
         self.set_angle_duty_cycle(-ANGLE_HOMING_DUTY_CYCLE)
-        
+    

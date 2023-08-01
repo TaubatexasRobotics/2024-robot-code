@@ -22,6 +22,10 @@ class MyRobot(wpilib.TimedRobot):
         self.arm = Arm()
         self.intake = Intake()
         self.timer = wpilib.Timer()
+        self.comunityAngle = 0
+        self.comunityLenght = 0
+        self.midAngle = 0
+        self.midLenght = 0
 
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
@@ -59,6 +63,11 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.update_odometry()
             self.field.setRobotPose(self.drivetrain.get_pose())
             self.smartdashboard.putData("Field", self.field)
+
+            self.smartdashboard.putNumber("Mid Angle", self.midAngle)
+            self.smartdashboard.putNumber("Mid Length", self.midLenght)
+            self.smartdashboard.putNumber("Comunity Angle", self.comunityAngle)
+            self.smartdashboard.putNumber("Comunity Length", self.comunityLenght)
         except BaseException as e:
             log_exception(e)
         
@@ -107,6 +116,14 @@ class MyRobot(wpilib.TimedRobot):
 
             if self.controller.stop_intake():
                 self.intake.stop()
+
+            if self.set_angle_and_lenght_position_mid():
+                self.arm.set_angle_position(midAngle)
+                self.arm.set_length_position(midLenght)
+
+            if self.set_angle_and_lenght_position_comunity():
+                self.arm.set_angle_position(comunityAngle)
+                self.arm.set_length_position(comunityLenght)
 
         except BaseException as e: 
             log_exception(e)
