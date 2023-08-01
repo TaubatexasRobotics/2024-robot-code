@@ -77,3 +77,8 @@ class Controller:
     def stop_intake(self):
         return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)
 
+    def set_angle_and_lenght_position_mid(self):
+        return self.stick.getRawButton(START_BUTTON)
+
+    def set_angle_and_lenght_position_comunity(self):
+        return self.stick.getRawButton(SELECT_BUTTON)

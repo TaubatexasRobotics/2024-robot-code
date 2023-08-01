@@ -22,6 +22,10 @@ class MyRobot(wpilib.TimedRobot):
         self.arm = Arm()
         self.intake = Intake()
         self.timer = wpilib.Timer()
+        self.comunity_angle = 0
+        self.comunity_lenght = 0
+        self.mid_angle = 0
+        self.mid_lenght = 0
 
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
@@ -31,6 +35,12 @@ class MyRobot(wpilib.TimedRobot):
         
         self.arm.stop_arm_angle()
         self.arm.stop_arm_length()
+
+        self.smartdashboard.putNumber("Mid Angle", self.mid_angle)
+        self.smartdashboard.putNumber("Mid Length", self.mid_lenght)
+        self.smartdashboard.putNumber("Comunity Angle", self.comunity_angle)
+        self.smartdashboard.putNumber("Comunity Length", self.comunity_lenght)
+
         
     #update the dashboard
     def robotPeriodic(self) -> None:
@@ -59,6 +69,11 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.update_odometry()
             self.field.setRobotPose(self.drivetrain.get_pose())
             self.smartdashboard.putData("Field", self.field)
+
+            self.mid_angle = self.smartdashboard.getNumber("Mid Angle", self.mid_angle)
+            self.mid_lenght = self.smartdashboard.getNumber("Mid Length", self.mid_lenght)
+            self.comunity_angle = self.smartdashboard.getNumber("Comunity Angle", self.comunity_angle)
+            self.comunity_lenght = self.smartdashboard.getNumber("Comunity Length", self.comunity_lenght)
         except BaseException as e:
             log_exception(e)
         
@@ -107,6 +122,14 @@ class MyRobot(wpilib.TimedRobot):
 
             if self.controller.stop_intake():
                 self.intake.stop()
+
+            if self.controller.set_angle_and_lenght_position_mid():
+                self.arm.set_angle_position(self.mid_angle)
+                self.arm.set_length_position(self.mid_lenght)
+
+            if self.controller.set_angle_and_lenght_position_comunity():
+                self.arm.set_angle_position(self.comunity_angle)
+                self.arm.set_length_position(self.comunity_lenght)
 
         except BaseException as e: 
             log_exception(e)
