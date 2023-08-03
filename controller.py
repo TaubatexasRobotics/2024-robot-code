@@ -1,6 +1,7 @@
 import wpilib
 
 JOYSTICK_PORT = 0
+LOW_SENSITIVITY_FACTOR = 0.6
 
 A_BUTTON = 1
 B_BUTTON = 2
@@ -31,21 +32,32 @@ POV_DOWN_LEFT = 225
 POV_LEFT = 270
 POV_UP_LEFT = 315
 
+
+
 class Controller:
     def __init__(self):
         self.stick = wpilib.Joystick(JOYSTICK_PORT)
+        self.low_sensitivity_mode = False
     
     # def toggle_compressor(self):
     #     if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
     #         return True
     #     return False
+
+    def sensitivity_factor(self):
+        if self.low_sensitivity_mode == True:
+            return LOW_SENSITIVITY_FACTOR
+        return 1.0
     
     def get_drive(self) -> (float, float):
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
         combined_value = lt_value - rt_value
+        
+        forward_speed = combined_value * self.sensitivity_factor()
+        rotation_speed = self.stick.getRawAxis(AXIS_LEFT_X) * self.sensitivity_factor()
 
-        return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
+        return forward_speed , rotation_speed
     
     def decrease_arm_length(self):
         return self.stick.getRawButton(LB_BUTTON)
@@ -86,7 +98,7 @@ class Controller:
     def set_angle_and_lenght_position_lower(self):
         return self.stick.getPOV(POV_DOWN)
     
-    def toggle_sensitivity_mode(self):
+    def toggle_low_sensitivity_mode(self):
         return self.stick.getRawButtonPressed(SELECT_BUTTON)
     
 
