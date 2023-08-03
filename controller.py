@@ -87,17 +87,18 @@ class Controller:
     def stop_intake(self) -> bool:
         return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)
 
+    def set_angle_and_lenght_position_high(self) -> bool:
+        return self.stick.getPOV() == POV_UP
+    
     def set_angle_and_lenght_position_mid(self) -> bool:
-        return self.stick.getPOV(POV_RIGHT)
-
-    def set_angle_and_lenght_position_comunity(self) -> bool:
-        return self.stick.getPOV(POV_UP)
+        return self.stick.getPOV() == POV_RIGHT
     
-    def set_angle_and_lenght_position_lower(self) -> bool:
-        return self.stick.getPOV(POV_DOWN)
+    def set_angle_and_lenght_position_low(self) -> bool:
+        return self.stick.getPOV() == POV_DOWN
     
-    def toggle_low_sensitivity_mode(self) -> bool:
+    def sensitivity_toggle_button(self) -> bool:
         return self.stick.getRawButtonPressed(SELECT_BUTTON)
     
-
+    def toggle_low_sensitivity_mode(self) -> bool:
+        self.low_sensitivity_mode = not self.low_sensitivity_mode
     

@@ -5,8 +5,8 @@ from controller import Controller
 
 import wpilib
 
-AUTONOMOUS_SPEED = 0.4
-AUTONOMOUS_DISTANCE = 1
+AUTONOMOUS_SPEED = 0.9
+AUTONOMOUS_DISTANCE = -3
 
 GAMEPIECE_SCORING_DURATION = 5
 AUTONOMOUS_MOVEMENT_DURATION = 8
@@ -22,10 +22,12 @@ class MyRobot(wpilib.TimedRobot):
         self.arm = Arm()
         self.intake = Intake()
         self.timer = wpilib.Timer()
-        self.comunity_angle = 0
-        self.comunity_lenght = 0
-        self.mid_angle = 0
-        self.mid_lenght = 0
+        self.high_angle = 1
+        self.high_lenght = 1
+        self.mid_angle = 1
+        self.mid_lenght = 1
+        self.low_angle = 1
+        self.low_lenght = 1
         # wpilib.CameraServer.launch()
 
         self.smartdashboard = wpilib.SmartDashboard
@@ -39,9 +41,10 @@ class MyRobot(wpilib.TimedRobot):
 
         self.smartdashboard.putNumber("Mid Angle", self.mid_angle)
         self.smartdashboard.putNumber("Mid Length", self.mid_lenght)
-        self.smartdashboard.putNumber("Comunity Angle", self.comunity_angle)
-        self.smartdashboard.putNumber("Comunity Length", self.comunity_lenght)
-
+        self.smartdashboard.putNumber("Comunity Angle", self.high_angle)
+        self.smartdashboard.putNumber("Comunity Length", self.high_lenght)
+        self.smartdashboard.putNumber("Low Angle", self.low_angle)
+        self.smartdashboard.putNumber("Low Length", self.low_lenght)
         
     #update the dashboard
     def robotPeriodic(self) -> None:
@@ -73,8 +76,12 @@ class MyRobot(wpilib.TimedRobot):
 
             self.mid_angle = self.smartdashboard.getNumber("Mid Angle", self.mid_angle)
             self.mid_lenght = self.smartdashboard.getNumber("Mid Length", self.mid_lenght)
-            self.comunity_angle = self.smartdashboard.getNumber("Comunity Angle", self.comunity_angle)
-            self.comunity_lenght = self.smartdashboard.getNumber("Comunity Length", self.comunity_lenght)
+            self.high_angle = self.smartdashboard.getNumber("Comunity Angle", self.high_angle)
+            self.high_lenght = self.smartdashboard.getNumber("Comunity Length", self.high_lenght)
+
+            self.low_angle = self.smartdashboard.getNumber("Low Angle", self.low_angle)
+            self.low_lenght = self.smartdashboard.getNumber("Low Length", self.low_lenght)
+
         except BaseException as e:
             log_exception(e)
         
@@ -93,6 +100,9 @@ class MyRobot(wpilib.TimedRobot):
         try:
             if ONLY_DRIVETRAIN_MODE:
                 return
+            
+            if self.controller.sensitivity_toggle_button():
+                self.controller.toggle_low_sensitivity_mode()
 
             if self.controller.decrease_arm_length():
                 self.arm.decrease_arm_length()
@@ -123,13 +133,17 @@ class MyRobot(wpilib.TimedRobot):
             if self.controller.stop_intake():
                 self.intake.stop()
 
+            if self.controller.set_angle_and_lenght_position_high():
+                self.arm.set_angle_position(self.high_angle)
+                self.arm.set_length_position(self.high_lenght)
+
             if self.controller.set_angle_and_lenght_position_mid():
                 self.arm.set_angle_position(self.mid_angle)
                 self.arm.set_length_position(self.mid_lenght)
 
-            if self.controller.set_angle_and_lenght_position_comunity():
-                self.arm.set_angle_position(self.comunity_angle)
-                self.arm.set_length_position(self.comunity_lenght)
+            if self.controller.set_angle_and_lenght_position_low():
+                self.arm.set_angle_position(self.low_angle)
+                self.arm.set_length_position(self.low_lenght)
 
         except BaseException as e: 
             log_exception(e)
@@ -145,7 +159,7 @@ class MyRobot(wpilib.TimedRobot):
             log_exception(e)
     def autonomousPeriodic(self) -> None:
         try:
-            if self.drivetrain.get_distance() < AUTONOMOUS_DISTANCE:
+            if self.drivetrain.get_distance() > AUTONOMOUS_DISTANCE:
                 self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
 
             if ONLY_DRIVETRAIN_MODE:
