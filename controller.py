@@ -35,10 +35,10 @@ class Controller:
     def __init__(self):
         self.stick = wpilib.Joystick(JOYSTICK_PORT)
     
-    def toggle_compressor(self):
-        if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
-            return True
-        return False
+    # def toggle_compressor(self):
+    #     if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
+    #         return True
+    #     return False
     
     def get_drive(self) -> (float, float):
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
@@ -78,7 +78,16 @@ class Controller:
         return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)
 
     def set_angle_and_lenght_position_mid(self):
-        return self.stick.getRawButton(START_BUTTON)
+        return self.stick.getPOV(POV_RIGHT)
 
     def set_angle_and_lenght_position_comunity(self):
-        return self.stick.getRawButton(SELECT_BUTTON)
+        return self.stick.getPOV(POV_UP)
+    
+    def set_angle_and_lenght_position_lower(self):
+        return self.stick.getPOV(POV_DOWN)
+    
+    def toggle_sensitivity_mode(self):
+        return self.stick.getRawButtonPressed(SELECT_BUTTON)
+    
+
+    

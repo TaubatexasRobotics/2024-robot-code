@@ -82,8 +82,7 @@ class MyRobot(wpilib.TimedRobot):
         try:
             self.drivetrain.differential_drive.setSafetyEnabled(True)
         except BaseException as e:
-            if ONLY_DRIVETRAIN_MODE:
-                self.intake.compressor.disable()
+            log_exception(e)
 
     def teleopPeriodic(self) -> None:
         try:
@@ -137,14 +136,11 @@ class MyRobot(wpilib.TimedRobot):
         
     def autonomousInit(self) -> None:
         try:
-            self.intake.compressor.disable()
             self.drivetrain.differential_drive.setSafetyEnabled(True)
             self.drivetrain.differential_drive.setExpiration(0.1)
             self.timer.reset()
             self.timer.start()
-            
-            if ONLY_DRIVETRAIN_MODE:
-                self.intake.compressor.disable()
+
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
