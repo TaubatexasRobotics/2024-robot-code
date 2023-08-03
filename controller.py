@@ -17,10 +17,10 @@ AXIS_LEFT_X = 0
 AXIS_LEFT_Y = 1
 AXIS_RIGHT_X = 4
 AXIS_RIGHT_Y = 5
-# AXIS_LEFT_TRIGGER = 2 - XBOX CONTROLLER
-# AXIS_RIGHT_TRIGGER = 3 - XBOX CONTROLLER
-AXIS_LEFT_TRIGGER = 2
-AXIS_RIGHT_TRIGGER = 5
+AXIS_LEFT_TRIGGER = 2 #- XBOX CONTROLLER
+AXIS_RIGHT_TRIGGER = 3 #- # XBOX CONTROLLER
+# AXIS_LEFT_TRIGGER = 2 - Playstation
+# AXIS_RIGHT_TRIGGER = 5
 
 POV_UP = 0
 POV_UP_RIGHT = 45
@@ -45,7 +45,7 @@ class Controller:
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
         combined_value = lt_value - rt_value
 
-        return self.stick.getRawAxis(5), self.stick.getRawAxis(AXIS_LEFT_X)
+        return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
     
     def decrease_arm_length(self):
         return self.stick.getRawButton(LB_BUTTON)
@@ -60,19 +60,19 @@ class Controller:
         return self.stick.getRawAxis(AXIS_RIGHT_Y)
     
     def decrease_arm_angle(self):
-        return self.stick.getRawButton(A_BUTTON)
+        return self.stick.getRawButton(Y_BUTTON)
     
     def increase_arm_angle(self):
-        return self.stick.getRawButton(Y_BUTTON)
+        return self.stick.getRawButton(A_BUTTON)
     
     def stop_arm_angle(self):
         return self.stick.getRawButtonReleased(A_BUTTON) or self.stick.getRawButtonReleased(Y_BUTTON)
     
     def catch_gamepiece(self):
-        return self.stick.getRawButton(B_BUTTON)
+        return self.stick.getRawButton(X_BUTTON)
     
     def release_gamepiece(self):
-        return self.stick.getRawButton(X_BUTTON)
+        return self.stick.getRawButton(B_BUTTON)
     
     def stop_intake(self):
         return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)

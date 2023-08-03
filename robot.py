@@ -26,6 +26,7 @@ class MyRobot(wpilib.TimedRobot):
         self.comunity_lenght = 0
         self.mid_angle = 0
         self.mid_lenght = 0
+        # wpilib.CameraServer.launch()
 
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
