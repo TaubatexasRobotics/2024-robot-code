@@ -5,12 +5,18 @@ from controller import Controller
 
 import wpilib
 
-AUTONOMOUS_SPEED = 0.9
-AUTONOMOUS_DISTANCE = -3
+AUTONOMOUS_SPEED = 0.65
+AUTONOMOUS_DISTANCE = -2.4
+AUTONOMOUS_MAX_DISTANCE =-3
 
 GAMEPIECE_SCORING_DURATION = 5
 AUTONOMOUS_MOVEMENT_DURATION = 8
 ONLY_DRIVETRAIN_MODE = False
+
+SHORT_LINE_DISTANCE = -1.87
+LONG_LINE_DISTANCE = -3.42
+INITIAL_GAMEPIECES_DISTANCE = -5.69
+MIDDLE_LINE_DISTANCE = -7.24
 
 def log_exception(e):
     wpilib.DataLogManager.log(repr(e))
@@ -22,13 +28,19 @@ class MyRobot(wpilib.TimedRobot):
         self.arm = Arm()
         self.intake = Intake()
         self.timer = wpilib.Timer()
-        self.high_angle = 1
-        self.high_lenght = 1
-        self.mid_angle = 1
-        self.mid_lenght = 1
-        self.low_angle = 1
-        self.low_lenght = 1
-        # wpilib.CameraServer.launch()
+
+        self.task_count = 0
+        # self.high_angle = 1
+        # self.high_lenght = 1
+
+        self.high_angle = -11.404823303222656
+        self.high_lenght = 2.738093852996826
+
+        self.mid_angle = -12.38
+        self.mid_lenght = 3.1428
+        self.low_angle = 2.098
+        self.low_lenght = -20.190
+        wpilib.CameraServer.launch()
 
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
@@ -88,6 +100,8 @@ class MyRobot(wpilib.TimedRobot):
     def teleopInit(self) -> None:
         try:
             self.drivetrain.differential_drive.setSafetyEnabled(True)
+            self.arm.reset_lenght_encoder()
+            self.arm.reset_angle_encoder()
         except BaseException as e:
             log_exception(e)
 
@@ -135,15 +149,15 @@ class MyRobot(wpilib.TimedRobot):
 
             if self.controller.set_angle_and_lenght_position_high():
                 self.arm.set_angle_position(self.high_angle)
-                self.arm.set_length_position(self.high_lenght)
+                # self.arm.set_length_position(self.high_lenght)
 
             if self.controller.set_angle_and_lenght_position_mid():
                 self.arm.set_angle_position(self.mid_angle)
-                self.arm.set_length_position(self.mid_lenght)
+                # self.arm.set_length_position(self.mid_lenght)
 
             if self.controller.set_angle_and_lenght_position_low():
                 self.arm.set_angle_position(self.low_angle)
-                self.arm.set_length_position(self.low_lenght)
+                # self.arm.set_length_position(self.low_lenght)
 
         except BaseException as e: 
             log_exception(e)
@@ -155,15 +169,36 @@ class MyRobot(wpilib.TimedRobot):
             self.timer.reset()
             self.timer.start()
 
+            self.drivetrain.set_stop_distance()
+            self.auto_speed = AUTONOMOUS_SPEED
+
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
+        distance = self.drivetrain.get_distance()
         try:
-            if self.drivetrain.get_distance() > AUTONOMOUS_DISTANCE:
-                self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
-
-            if ONLY_DRIVETRAIN_MODE:
+            if self.task_count == 0:
+                self.drivetrain.move_straight(AUTONOMOUS_SPEED)
+                if self.timer.get() > 0.8:
+                    self.drivetrain.idle()
+                    self.drivetrain.reset_encoders()
+                    print('start 1')
+                    self.task_count += 1
                 return
+
+            if self.task_count == 1:
+                if distance > -2.40:
+                    self.drivetrain.move_straight(-self.auto_speed)
+
+                elif distance < -2:
+                    self.drivetrain.move_straight(self.auto_speed)
+                    self.auto_speed = self.auto_speed*.99
+                else:
+                    self.drivetrain.idle()
+                    
+
+                if ONLY_DRIVETRAIN_MODE:
+                    return
         except BaseException as e:
             log_exception(e)
         

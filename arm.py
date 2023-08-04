@@ -93,6 +93,14 @@ class Arm:
     def get_angle_position(self) -> float:
         return self.angle_encoder.getPosition()
     
+    def reset_lenght_encoder(self):
+        self.length_encoder.setPosition(0)
+        self.set_length_position(0)
+
+    def reset_angle_encoder(self):
+        self.angle_encoder.setPosition(0)
+        self.set_angle_position(0)
+        
     def get_length_position(self) -> float:
         return self.length_encoder.getPosition()
     
