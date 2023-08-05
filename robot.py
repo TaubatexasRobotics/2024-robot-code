@@ -38,7 +38,7 @@ class MyRobot(wpilib.TimedRobot):
 
         self.mid_angle = -12.38
         self.mid_lenght = 3.1428
-        self.low_angle = 2.098
+        self.low_angle = -2.098
         self.low_lenght = -20.190
         wpilib.CameraServer.launch()
 
@@ -148,11 +148,11 @@ class MyRobot(wpilib.TimedRobot):
                 self.intake.stop()
 
             if self.controller.set_angle_and_lenght_position_high():
-                self.arm.set_angle_position(self.high_angle)
+                self.arm.set_angle_smart_motion(self.high_angle)
                 # self.arm.set_length_position(self.high_lenght)
 
             if self.controller.set_angle_and_lenght_position_mid():
-                self.arm.set_angle_position(self.mid_angle)
+                self.arm.set_angle_smart_motion(self.mid_angle)
                 # self.arm.set_length_position(self.mid_lenght)
 
             if self.controller.set_angle_and_lenght_position_low():

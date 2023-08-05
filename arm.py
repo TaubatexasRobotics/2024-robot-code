@@ -18,6 +18,15 @@ ARM_ANGLE_PID = {
     "KD" : 0.1,
 }
 
+ARM_ANGLE_PID = {
+    "KP" : 0.1,
+    "KI" : 0.0,
+    "KD" : 0.1,
+    "MAX_VELOCITY" : 2000,
+    "MAX_ACCELERATION" : 1500,
+    "ALLOWABLE_ERROR" : 0
+}
+
 ARM_LENGTH_PID = {
     "KP" : 0.1,
     "KI" : 0.0,
@@ -50,6 +59,11 @@ class Arm:
         self.angle_pid.setP(ARM_ANGLE_PID["KP"])
         self.angle_pid.setI(ARM_ANGLE_PID["KI"])
         self.angle_pid.setD(ARM_ANGLE_PID["KD"])
+
+        #set angle smart motion constants
+        # self.angle_pid.setSmartMotionMaxVelocity(ARM_ANGLE_PID["MAX_VELOCITY"])
+        # self.angle_pid.setSmartMotionMaxAccel(ARM_ANGLE_PID["MAX_ACCELERATION"])
+        # self.angle_pid.setSmartMotionAllowedClosedLoopError(ARM_ANGLE_PID["ALLOWABLE_ERROR"])
 
         self.length_pid = self.m_length.getPIDController()
         self.length_pid.setP(ARM_LENGTH_PID["KP"])
@@ -106,6 +120,13 @@ class Arm:
     
     def set_angle_position(self, angle:float) -> None:
         self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kPosition)
+
+    # set angle smart motion
+    def set_angle_smart_motion(self, angle:float) -> None:
+        self.angle_pid.setReference(angle, rev.CANSparkMax.ControlType.kSmartMotion)
+
+    def set_length_smart_motion(self, length:float) -> None:
+        self.length_pid.setReference(length, rev.CANSparkMax.ControlType.kSmartMotion)
     
     def set_length_position(self, length:float) -> None:
         self.length_pid.setReference(length, rev.CANSparkMax.ControlType.kPosition)
