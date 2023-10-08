@@ -1,16 +1,22 @@
 from drivetrain import Drivetrain
 from arm import Arm
-from pneumatic_intake import PneumaticIntake as Intake
+from tweezer_intake import TweezerIntake as Intake
 from controller import Controller
 
 import wpilib
 
-AUTONOMOUS_SPEED = 0.4
-AUTONOMOUS_DISTANCE = 1
+AUTONOMOUS_SPEED = 0.65
+AUTONOMOUS_DISTANCE = -2.4
+AUTONOMOUS_MAX_DISTANCE =-3
 
 GAMEPIECE_SCORING_DURATION = 5
 AUTONOMOUS_MOVEMENT_DURATION = 8
-ONLY_DRIVETRAIN_MODE = True
+ONLY_DRIVETRAIN_MODE = False
+
+SHORT_LINE_DISTANCE = -1.87
+LONG_LINE_DISTANCE = -3.42
+INITIAL_GAMEPIECES_DISTANCE = -5.69
+MIDDLE_LINE_DISTANCE = -7.24
 
 def log_exception(e):
     wpilib.DataLogManager.log(repr(e))
@@ -23,6 +29,19 @@ class MyRobot(wpilib.TimedRobot):
         self.intake = Intake()
         self.timer = wpilib.Timer()
 
+        self.task_count = 0
+        # self.high_angle = 1
+        # self.high_lenght = 1
+
+        self.high_angle = -11.404823303222656
+        self.high_lenght = 2.738093852996826
+
+        self.mid_angle = -12.38
+        self.mid_lenght = 3.1428
+        self.low_angle = -2.098
+        self.low_lenght = -20.190
+        wpilib.CameraServer.launch()
+
         self.smartdashboard = wpilib.SmartDashboard
         self.field = wpilib.Field2d()
         
@@ -31,6 +50,13 @@ class MyRobot(wpilib.TimedRobot):
         
         self.arm.stop_arm_angle()
         self.arm.stop_arm_length()
+
+        self.smartdashboard.putNumber("Mid Angle", self.mid_angle)
+        self.smartdashboard.putNumber("Mid Length", self.mid_lenght)
+        self.smartdashboard.putNumber("Comunity Angle", self.high_angle)
+        self.smartdashboard.putNumber("Comunity Length", self.high_lenght)
+        self.smartdashboard.putNumber("Low Angle", self.low_angle)
+        self.smartdashboard.putNumber("Low Length", self.low_lenght)
         
     #update the dashboard
     def robotPeriodic(self) -> None:
@@ -59,15 +85,25 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.update_odometry()
             self.field.setRobotPose(self.drivetrain.get_pose())
             self.smartdashboard.putData("Field", self.field)
+
+            self.mid_angle = self.smartdashboard.getNumber("Mid Angle", self.mid_angle)
+            self.mid_lenght = self.smartdashboard.getNumber("Mid Length", self.mid_lenght)
+            self.high_angle = self.smartdashboard.getNumber("Comunity Angle", self.high_angle)
+            self.high_lenght = self.smartdashboard.getNumber("Comunity Length", self.high_lenght)
+
+            self.low_angle = self.smartdashboard.getNumber("Low Angle", self.low_angle)
+            self.low_lenght = self.smartdashboard.getNumber("Low Length", self.low_lenght)
+
         except BaseException as e:
             log_exception(e)
         
     def teleopInit(self) -> None:
         try:
             self.drivetrain.differential_drive.setSafetyEnabled(True)
+            self.arm.reset_lenght_encoder()
+            self.arm.reset_angle_encoder()
         except BaseException as e:
-            if ONLY_DRIVETRAIN_MODE:
-                self.intake.compressor.disable()
+            log_exception(e)
 
     def teleopPeriodic(self) -> None:
         try:
@@ -78,48 +114,91 @@ class MyRobot(wpilib.TimedRobot):
         try:
             if ONLY_DRIVETRAIN_MODE:
                 return
+            
+            if self.controller.sensitivity_toggle_button():
+                self.controller.toggle_low_sensitivity_mode()
 
-            if self.controller.toggle_compressor():
-                self.intake.toggle_compressor()
-            if self.controller.toggle_intake():
-                self.intake.toggle()
             if self.controller.decrease_arm_length():
                 self.arm.decrease_arm_length()
 
             if self.controller.increase_arm_length():
                 self.arm.increase_arm_length()
+
             if self.controller.stop_arm_length():
                 self.arm.stop_arm_length()
 
+
             if self.controller.decrease_arm_angle():
                 self.arm.decrease_arm_angle()
+
             if self.controller.increase_arm_angle():
                 self.arm.increase_arm_angle()
 
             if self.controller.stop_arm_angle():
                 self.arm.stop_arm_angle()
+
+
+            if self.controller.catch_gamepiece():
+                self.intake.catch_gamepiece()
+
+            if self.controller.release_gamepiece():
+                self.intake.release_gamepiece()
+
+            if self.controller.stop_intake():
+                self.intake.stop()
+
+            if self.controller.set_angle_and_lenght_position_high():
+                self.arm.set_angle_smart_motion(self.high_angle)
+                # self.arm.set_length_position(self.high_lenght)
+
+            if self.controller.set_angle_and_lenght_position_mid():
+                self.arm.set_angle_smart_motion(self.mid_angle)
+                # self.arm.set_length_position(self.mid_lenght)
+
+            if self.controller.set_angle_and_lenght_position_low():
+                self.arm.set_angle_position(self.low_angle)
+                # self.arm.set_length_position(self.low_lenght)
+
         except BaseException as e: 
             log_exception(e)
         
     def autonomousInit(self) -> None:
         try:
-            self.intake.compressor.disable()
             self.drivetrain.differential_drive.setSafetyEnabled(True)
             self.drivetrain.differential_drive.setExpiration(0.1)
             self.timer.reset()
             self.timer.start()
-            
-            if ONLY_DRIVETRAIN_MODE:
-                self.intake.compressor.disable()
+
+            self.drivetrain.set_stop_distance()
+            self.auto_speed = AUTONOMOUS_SPEED
+
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
+        distance = self.drivetrain.get_distance()
         try:
-            if self.drivetrain.get_distance() < AUTONOMOUS_DISTANCE:
-                self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
-
-            if ONLY_DRIVETRAIN_MODE:
+            if self.task_count == 0:
+                self.drivetrain.move_straight(AUTONOMOUS_SPEED)
+                if self.timer.get() > 0.8:
+                    self.drivetrain.idle()
+                    self.drivetrain.reset_encoders()
+                    print('start 1')
+                    self.task_count += 1
                 return
+
+            if self.task_count == 1:
+                if distance > -2.40:
+                    self.drivetrain.move_straight(-self.auto_speed)
+
+                elif distance < -2:
+                    self.drivetrain.move_straight(self.auto_speed)
+                    self.auto_speed = self.auto_speed*.99
+                else:
+                    self.drivetrain.idle()
+                    
+
+                if ONLY_DRIVETRAIN_MODE:
+                    return
         except BaseException as e:
             log_exception(e)
         

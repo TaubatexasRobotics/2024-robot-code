@@ -1,6 +1,7 @@
 import wpilib
 
 JOYSTICK_PORT = 0
+LOW_SENSITIVITY_FACTOR = 0.6
 
 A_BUTTON = 1
 B_BUTTON = 2
@@ -17,8 +18,10 @@ AXIS_LEFT_X = 0
 AXIS_LEFT_Y = 1
 AXIS_RIGHT_X = 4
 AXIS_RIGHT_Y = 5
-AXIS_LEFT_TRIGGER = 2
-AXIS_RIGHT_TRIGGER = 3
+AXIS_LEFT_TRIGGER = 2 #- XBOX CONTROLLER
+AXIS_RIGHT_TRIGGER = 3 #- # XBOX CONTROLLER
+# AXIS_LEFT_TRIGGER = 2 - Playstation
+# AXIS_RIGHT_TRIGGER = 5
 
 POV_UP = 0
 POV_UP_RIGHT = 45
@@ -32,41 +35,70 @@ POV_UP_LEFT = 315
 class Controller:
     def __init__(self):
         self.stick = wpilib.Joystick(JOYSTICK_PORT)
+        self.low_sensitivity_mode = False
+    
+    # def toggle_compressor(self):
+    #     if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
+    #         return True
+    #     return False
 
-    def toggle_intake(self):
-        if self.stick.getRawButtonPressed(B_BUTTON) == True:
-            return True
-        return False
+    def sensitivity_factor(self) -> float:
+        if self.low_sensitivity_mode == True:
+            return LOW_SENSITIVITY_FACTOR
+        return 1.0
     
-    def toggle_compressor(self):
-        if self.stick.getRawButtonPressed(SELECT_BUTTON) == True:
-            return True
-        return False
-    
-    def get_drive(self):
+    def get_drive(self) -> (float, float):
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
         combined_value = lt_value - rt_value
+        
+        forward_speed = combined_value * self.sensitivity_factor()
+        rotation_speed = self.stick.getRawAxis(AXIS_LEFT_X) * self.sensitivity_factor()
 
-        return combined_value, self.stick.getRawAxis(AXIS_LEFT_X)
+        return forward_speed , rotation_speed
     
-    def decrease_arm_length(self):
+    def decrease_arm_length(self) -> bool:
         return self.stick.getRawButton(LB_BUTTON)
     
-    def increase_arm_length(self):
+    def increase_arm_length(self) -> bool:
         return self.stick.getRawButton(RB_BUTTON)
     
-    def stop_arm_length(self):
+    def stop_arm_length(self) -> bool:
         return self.stick.getRawButtonReleased(LB_BUTTON) or self.stick.getRawButtonReleased(RB_BUTTON)
     
-    def move_angle(self):
+    def move_angle(self) -> float:
         return self.stick.getRawAxis(AXIS_RIGHT_Y)
     
-    def decrease_arm_angle(self):
-        return self.stick.getRawButton(A_BUTTON)
-    
-    def increase_arm_angle(self):
+    def decrease_arm_angle(self) -> bool:
         return self.stick.getRawButton(Y_BUTTON)
     
-    def stop_arm_angle(self):
+    def increase_arm_angle(self) -> bool:
+        return self.stick.getRawButton(A_BUTTON)
+    
+    def stop_arm_angle(self) -> bool:
         return self.stick.getRawButtonReleased(A_BUTTON) or self.stick.getRawButtonReleased(Y_BUTTON)
+    
+    def catch_gamepiece(self) -> bool:
+        return self.stick.getRawButton(X_BUTTON)
+    
+    def release_gamepiece(self) -> bool:
+        return self.stick.getRawButton(B_BUTTON)
+    
+    def stop_intake(self) -> bool:
+        return self.stick.getRawButtonReleased(B_BUTTON) or self.stick.getRawButtonReleased(X_BUTTON)
+
+    def set_angle_and_lenght_position_high(self) -> bool:
+        return self.stick.getPOV() == POV_UP
+    
+    def set_angle_and_lenght_position_mid(self) -> bool:
+        return self.stick.getPOV() == POV_RIGHT
+    
+    def set_angle_and_lenght_position_low(self) -> bool:
+        return self.stick.getPOV() == POV_DOWN
+    
+    def sensitivity_toggle_button(self) -> bool:
+        return self.stick.getRawButtonPressed(SELECT_BUTTON)
+    
+    def toggle_low_sensitivity_mode(self) -> bool:
+        self.low_sensitivity_mode = not self.low_sensitivity_mode
+    

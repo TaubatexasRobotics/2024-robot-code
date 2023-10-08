@@ -7,6 +7,7 @@ import wpimath.kinematics
 from navx import AHRS
 
 import ctre
+import math
 
 C_RIGHT_FRONT = 1
 C_RIGHT_BACK = 2
@@ -51,6 +52,22 @@ class Drivetrain:
         rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
+
+    def set_stop_distance(self):
+        self.stop_distance = self.get_distance()
+
+    def stop(self):
+        self.kp = 100
+        error = self.get_distance() - self.stop_distance
+        power = math.ceil(error * self.kp)
+        self.move_straight(-power)
+
+    # def stop(self):
+    #     stop_distance = self.get_distance()
+    #     # if(self.get_distance < stop_distance)
+    #     error = self.get_distance()
+    #     error = self.
+    #     self.move_straight(kp * )
         
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
@@ -58,7 +75,7 @@ class Drivetrain:
     def make_turn(self, turn_speed):
         self.differential_drive.arcadeDrive(0, turn_speed)
 
-    def stop(self):
+    def idle(self):
         self.differential_drive.arcadeDrive(0, 0)
 
     def move(self, speed, turn_speed):
@@ -75,7 +92,8 @@ class Drivetrain:
         return self.encoder_right.get()
 
     def get_distance(self):
-        return (self.encoder_left.getDistance() + self.encoder_right.getDistance()) / 2
+        return self.encoder_right.getDistance()
+        # return (self.encoder_left.getDistance() + self.encoder_right.getDistance()) / 2
     
     def get_left_distance(self):
         return self.encoder_left.getDistance()
