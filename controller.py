@@ -42,7 +42,7 @@ class Controller:
             return LOW_SENSITIVITY_FACTOR
         return 1.0
     
-    def get_drive(self) -> Tuple[float, float]:
+    def get_drive(self) -> tuple[float, float]:
         rt_value = self.stick.getRawAxis(AXIS_RIGHT_TRIGGER)
         lt_value = self.stick.getRawAxis(AXIS_LEFT_TRIGGER)
         combined_value = lt_value - rt_value
