@@ -6,26 +6,23 @@ import wpimath.kinematics
 
 from navx import AHRS
 
-import ctre
+import rev
 import math
 
-C_RIGHT_FRONT = 1
-C_RIGHT_BACK = 2
-C_LEFT_FRONT = 3
-C_LEFT_BACK = 4
+C_RIGHT_FRONT = 50
+C_RIGHT_BACK = 51
+C_LEFT_FRONT = 52
+C_LEFT_BACK = 53
 
-LEFT_ENCODER = (0, 1)
-RIGHT_ENCODER = (2, 3)
-
-ENCODER_DISTANCE_PER_PULSE = 3.05/3925
+# ENCODER_DISTANCE_PER_PULSE = 3.05/3925
 INITIAL_POSE = (0, 0, 0) # (x, y, theta)
 
 class Drivetrain:
     def __init__(self):
-        self.m_left_back = ctre.WPI_VictorSPX(C_LEFT_BACK)
-        self.m_left_front = ctre.WPI_VictorSPX(C_LEFT_FRONT)
-        self.m_right_front = ctre.WPI_VictorSPX(C_RIGHT_FRONT)
-        self.m_right_back = ctre.WPI_VictorSPX(C_RIGHT_BACK)
+        self.m_left_back = rev.CANSparkMax(C_LEFT_BACK, rev.CANSparkMax.MotorType.kBrushless)
+        self.m_left_front = rev.CANSparkMax(C_LEFT_FRONT, rev.CANSparkMax.MotorType.kBrushless)
+        self.m_right_front = rev.CANSparkMax(C_RIGHT_FRONT, rev.CANSparkMax.MotorType.kBrushless)
+        self.m_right_back = rev.CANSparkMax(C_RIGHT_BACK, rev.CANSparkMax.MotorType.kBrushless)
 
         self.m_left= wpilib.MotorControllerGroup(self.m_left_front,self.m_left_back) 
         self.m_left.setInverted(True)
@@ -33,18 +30,18 @@ class Drivetrain:
 
         self.differential_drive  = wpilib.drive.DifferentialDrive(self.m_left, self.m_right)
 
-        self.encoder_left = wpilib.Encoder(*LEFT_ENCODER, True, wpilib.Encoder.EncodingType.k4X)
-        self.encoder_right = wpilib.Encoder(*RIGHT_ENCODER, False, wpilib.Encoder.EncodingType.k4X)
+        self.encoder_left = self.m_left_back.getEncoder()
+        self.encoder_right = self.m_right_back.getEncoder()
 
-        self.encoder_left.reset()
-        self.encoder_right.reset()
+        self.encoder_left.setPositionConversionFactor(1)
+        self.encoder_right.setPositionConversionFactor(1)
+        
+        self.encoder_left.setPosition(0)
+        self.encoder_right.setPosition(0)
         
         self.navx = AHRS.create_spi()
         self.navx.reset()
 
-        self.encoder_left.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
-        self.encoder_right.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE)
-        
         self.reference_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         self.left_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         self.right_pid_controller = wpimath.controller.PIDController(0, 0, 0)
@@ -62,13 +59,6 @@ class Drivetrain:
         power = math.ceil(error * self.kp)
         self.move_straight(-power)
 
-    # def stop(self):
-    #     stop_distance = self.get_distance()
-    #     # if(self.get_distance < stop_distance)
-    #     error = self.get_distance()
-    #     error = self.
-    #     self.move_straight(kp * )
-        
     def move_straight(self, speed):
         self.differential_drive.arcadeDrive(speed, 0)
 
@@ -82,24 +72,17 @@ class Drivetrain:
         self.differential_drive.arcadeDrive(speed, turn_speed)
 
     def reset_encoders(self):
-        self.encoder_left.reset()
-        self.encoder_right.reset()
-
-    def get_left_encoder_pulses(self):
-        return self.encoder_left.get()
-    
-    def get_right_encoder_pulses(self):
-        return self.encoder_right.get()
+        self.encoder_left.setPosition(0)
+        self.encoder_right.setPosition(0)
 
     def get_distance(self):
-        return self.encoder_right.getDistance()
-        # return (self.encoder_left.getDistance() + self.encoder_right.getDistance()) / 2
+        return (self.encoder_left.getPosition() + self.encoder_right.getPosition()) / 2
     
     def get_left_distance(self):
-        return self.encoder_left.getDistance()
+        return self.encoder_left.getPosition()
     
     def get_right_distance(self):
-        return self.encoder_right.getDistance()
+        return self.encoder_right.getPosition()
     
     def update_odometry(self):
         rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
@@ -110,6 +93,9 @@ class Drivetrain:
     
     def get_pitch(self):
         return self.navx.getPitch()
+    
+    def get_roll(self):
+        return self.navx.getRoll()
     
     def set_tank_drive_volts(self, leftVolts, rightVolts):
         self.m_left.setVoltage(leftVolts)
