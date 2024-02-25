@@ -158,7 +158,6 @@ class MyRobot(wpilib.TimedRobot):
                     self.auto_speed = self.auto_speed*.99
                 else:
                     self.drivetrain.idle()
-                    
 
                 if ONLY_DRIVETRAIN_MODE:
                     return

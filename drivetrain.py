@@ -86,7 +86,7 @@ class Drivetrain:
     
     def update_odometry(self):
         rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
-        self.odometry.update(rotation, self.encoder_left.getDistance(), self.encoder_right.getDistance())
+        self.odometry.update(rotation, self.get_left_distance(), self.get_right_distance())
         
     def get_pose(self):
         return self.odometry.getPose()
@@ -103,8 +103,8 @@ class Drivetrain:
         self.differential_drive.feed()
     
     def get_motors_voltage(self):
-        motor_left_v = (self.m_left_back.getMotorOutputVoltage() + self.m_left_front.getMotorOutputVoltage())/2
-        motor_right_v = (self.m_right_back.getMotorOutputVoltage() + self.m_right_front.getMotorOutputVoltage())/2
+        motor_left_v = (self.m_left_back.getBusVoltage() + self.m_left_front.getBusVoltage())/2
+        motor_right_v = (self.m_right_back.getBusVoltage() + self.m_right_front.getBusVoltage())/2
         return motor_left_v, motor_right_v
     
     def update_pid_constants(self):
