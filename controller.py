@@ -78,3 +78,9 @@ class Controller:
     
     def toggle_low_sensitivity_mode(self) -> bool:
         self.low_sensitivity_mode = not self.low_sensitivity_mode
+
+    def climb_up(self) -> bool:
+        return self.stick.getRawButton(RB_BUTTON)
+
+    def climb_down(self) -> bool:
+        return self.stick.getRawButton(LB_BUTTON)

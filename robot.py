@@ -1,6 +1,7 @@
 from drivetrain import Drivetrain
 from arm import Arm
 from tweezer_intake import TweezerIntake as Intake
+from climber import Climber
 from controller import Controller
 
 import wpilib
@@ -27,6 +28,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrain = Drivetrain()
         self.arm = Arm()
         self.intake = Intake()
+        self.climber = Climber()
         self.timer = wpilib.Timer()
 
         self.task_count = 0
@@ -122,6 +124,18 @@ class MyRobot(wpilib.TimedRobot):
             if self.controller.stop_intake():
                 self.intake.stop()
 
+            if self.controller.climb_up():
+                self.climber.climb_up()
+                print("climb_up")
+
+            if self.controller.climb_down():
+                self.climber.climb_down()
+                print("climb_down")
+
+            if not self.controller.climb_up() and not self.controller.climb_down():
+                self.climber.stop()
+                print("stop")
+
         except BaseException as e: 
             log_exception(e)
         
@@ -166,12 +180,8 @@ class MyRobot(wpilib.TimedRobot):
         
         try:
             self.arm.stop_arm_angle()
-            # if not self.arm.is_homed:
-            #     self.arm.home()
-            #     return
         except BaseException as e:
             log_exception(e)
-
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
