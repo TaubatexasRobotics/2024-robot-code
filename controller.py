@@ -67,6 +67,13 @@ class Controller:
     def catch_gamepiece(self) -> bool:
         return self.stick.getRawButton(X_BUTTON)
     
+    def store_gamepiece(self) -> bool:
+        return self.stick.getRawAxis(AXIS_RIGHT_X) < -0.2
+    
+    def send_to_shoot(self) -> bool:
+        print(self.stick.getRawAxis(AXIS_RIGHT_X) > 0.2)
+        return self.stick.getRawAxis(AXIS_RIGHT_X) > 0.2
+    
     def release_gamepiece(self) -> bool:
         return self.stick.getRawButton(B_BUTTON)
     
@@ -84,3 +91,4 @@ class Controller:
 
     def climb_down(self) -> bool:
         return self.stick.getRawButton(LB_BUTTON)
+    

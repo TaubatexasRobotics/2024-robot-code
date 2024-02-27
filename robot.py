@@ -1,8 +1,8 @@
 from drivetrain import Drivetrain
 from arm import Arm
-from tweezer_intake import TweezerIntake as Intake
 from climber import Climber
 from controller import Controller
+from shooter import Shooter
 
 import wpilib
 
@@ -27,7 +27,7 @@ class MyRobot(wpilib.TimedRobot):
         self.controller = Controller()
         self.drivetrain = Drivetrain()
         self.arm = Arm()
-        self.intake = Intake()
+        self.shooter = Shooter()
         self.climber = Climber()
         self.timer = wpilib.Timer()
 
@@ -122,13 +122,22 @@ class MyRobot(wpilib.TimedRobot):
                 self.arm.stop_arm_angle()
 
             if self.controller.catch_gamepiece():
-                self.intake.catch_gamepiece()
+                self.shooter.catch_gamepiece()
 
             if self.controller.release_gamepiece():
-                self.intake.release_gamepiece()
+                self.shooter.release_gamepiece()
 
             if self.controller.stop_intake():
-                self.intake.stop()
+                self.shooter.stop()
+
+            if self.controller.store_gamepiece():
+                self.shooter.store_gamepiece()
+
+            if self.controller.send_to_shoot():
+                self.shooter.send_to_shoot()
+
+            if not self.controller.send_to_shoot() and not self.controller.store_gamepiece():
+                self.shooter.stop_shooter_feeder()
 
             if self.controller.climb_up():
                 self.climber.climb_up()
