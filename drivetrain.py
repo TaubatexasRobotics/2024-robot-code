@@ -9,10 +9,10 @@ from navx import AHRS
 import rev
 import math
 
-C_RIGHT_FRONT = 50
+C_RIGHT_FRONT = 53
 C_RIGHT_BACK = 51
-C_LEFT_FRONT = 52
-C_LEFT_BACK = 53
+C_LEFT_FRONT = 50
+C_LEFT_BACK = 52
 
 # ENCODER_DISTANCE_PER_PULSE = 3.05/3925
 INITIAL_POSE = (0, 0, 0) # (x, y, theta)
