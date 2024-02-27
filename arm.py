@@ -38,8 +38,13 @@ class Arm:
 
         # self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
 
-    def init(self) -> None:
-        pass
+    def teleop_control(self, controller) -> None:
+        if not controller.are_any_held('A_BUTTON', 'Y_BUTTON'):
+            self.stop_arm_angle()
+        if controller.is_held('A_BUTTON'):
+            self.decrease_arm_angle()
+        if controller.is_held('Y_BUTTON'):
+            self.increase_arm_angle()
 
     def home_angle(self, duty_cycle:float = ANGLE_HOMING_DUTY_CYCLE) -> None:
         if self.angle_switch_is_pressed():
@@ -68,7 +73,6 @@ class Arm:
 
     def set_angle_duty_cycle(self, duty_cycle:float) -> None:
         self.angle_pid.setReference(duty_cycle, rev.CANSparkMax.ControlType.kDutyCycle)
-
 
     def increase_arm_angle(self) -> None:
         self.set_angle_duty_cycle(1.5 * ANGLE_HOMING_DUTY_CYCLE)

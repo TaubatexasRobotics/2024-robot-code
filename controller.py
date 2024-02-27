@@ -62,15 +62,6 @@ class Controller:
     def move_angle(self) -> float:
         return self.stick.getRawAxis(controller['AXIS_RIGHT_Y'])
     
-    def decrease_arm_angle(self) -> bool:
-        return self.stick.getRawButton(controller['Y_BUTTON'])
-    
-    def increase_arm_angle(self) -> bool:
-        return self.stick.getRawButton(controller['A_BUTTON'])
-    
-    def stop_arm_angle(self) -> bool:
-        return self.stick.getRawButtonReleased(controller['A_BUTTON']) or self.stick.getRawButtonReleased(controller['Y_BUTTON'])
-    
     def catch_gamepiece(self) -> bool:
         return self.stick.getRawButton(controller['X_BUTTON'])
     

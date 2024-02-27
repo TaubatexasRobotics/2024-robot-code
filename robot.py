@@ -112,41 +112,13 @@ class MyRobot(wpilib.TimedRobot):
             if self.controller.sensitivity_toggle_button():
                 self.controller.toggle_low_sensitivity_mode()
 
-            if self.controller.decrease_arm_angle():
-                self.arm.decrease_arm_angle()
+            self.climber.teleop_control(self.controller)
+            self.arm.teleop_control(self.controller)
+            self.shooter.teleop_control(self.controller)
 
-            if self.controller.increase_arm_angle():
-                self.arm.increase_arm_angle()
 
-            if self.controller.stop_arm_angle():
-                self.arm.stop_arm_angle()
 
-            if self.controller.catch_gamepiece():
-                self.shooter.catch_gamepiece()
 
-            if self.controller.release_gamepiece():
-                self.shooter.release_gamepiece()
-
-            if self.controller.stop_intake():
-                self.shooter.stop()
-
-            if self.controller.store_gamepiece():
-                self.shooter.store_gamepiece()
-
-            if self.controller.send_to_shoot():
-                self.shooter.send_to_shoot()
-
-            if not self.controller.send_to_shoot() and not self.controller.store_gamepiece():
-                self.shooter.stop_shooter_feeder()
-
-            if self.controller.climb_up():
-                self.climber.climb_up()
-
-            if self.controller.climb_down():
-                self.climber.climb_down()
-
-            if not self.controller.climb_up() and not self.controller.climb_down():
-                self.climber.stop()
 
         except BaseException as e: 
             log_exception(e)
@@ -171,7 +143,6 @@ class MyRobot(wpilib.TimedRobot):
                 if self.timer.get() > 0.8:
                     self.drivetrain.idle()
                     self.drivetrain.reset_encoders()
-                    print('start 1')
                     self.task_count += 1
                 return
 
