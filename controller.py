@@ -42,7 +42,16 @@ class Controller:
 
     def are_any_held(self, *button_names: str) -> bool:
         button_states = [self.is_held(button_name) for button_name in button_names]
-        return any(button_states)    
+        return any(button_states)
+    
+    def axis_to_digital(self, axis_name: str, threshold: float) -> bool:
+        if threshold < 0:
+            return self.stick.getRawAxis(controller[axis_name]) < threshold
+        return self.stick.getRawAxis(controller[axis_name]) > threshold
+    
+    def axis_between(self, axis_name: str, lower_threshold: float, upper_threshold: float) -> bool:
+        axis_value = self.stick.getRawAxis(controller[axis_name])
+        return axis_value > lower_threshold and axis_value < upper_threshold
     
     def sensitivity_factor(self) -> float:
         if self.low_sensitivity_mode == True:
@@ -62,21 +71,6 @@ class Controller:
     def move_angle(self) -> float:
         return self.stick.getRawAxis(controller['AXIS_RIGHT_Y'])
     
-    def catch_gamepiece(self) -> bool:
-        return self.stick.getRawButton(controller['X_BUTTON'])
-    
-    def store_gamepiece(self) -> bool:
-        return self.stick.getRawAxis(controller['AXIS_RIGHT_X']) < -0.2
-    
-    def send_to_shoot(self) -> bool:
-        return self.stick.getRawAxis(controller['AXIS_RIGHT_X']) > 0.2
-    
-    def release_gamepiece(self) -> bool:
-        return self.stick.getRawButton(controller['B_BUTTON'])
-    
-    def stop_intake(self) -> bool:
-        return self.stick.getRawButtonReleased(controller['B_BUTTON']) or self.stick.getRawButtonReleased(controller['X_BUTTON'])
-
     def sensitivity_toggle_button(self) -> bool:
         return self.stick.getRawButtonPressed(controller['SELECT_BUTTON'])
     
