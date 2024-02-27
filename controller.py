@@ -10,6 +10,39 @@ class Controller:
     def __init__(self):
         self.stick = wpilib.Joystick(JOYSTICK_PORT)
         self.low_sensitivity_mode = False
+
+    def is_pressed(self, button_name: str) -> bool:
+        return self.stick.getRawButtonPressed(controller[button_name])
+    
+    def is_released(self, button_name: str) -> bool:
+        return self.stick.getRawButtonReleased(controller[button_name])
+    
+    def is_held(self, button_name: str) -> bool:
+        return self.stick.getRawButton(controller[button_name])
+    
+    def are_all_released(self, *button_names: str) -> bool:
+        button_states = [self.is_released(button_name) for button_name in button_names]
+        return all(button_states)
+    
+    def are_any_released(self, *button_names: str) -> bool:
+        button_states = [self.is_released(button_name) for button_name in button_names]
+        return any(button_states)
+    
+    def are_all_pressed(self, *button_names: str) -> bool:
+        button_states = [self.is_pressed(button_name) for button_name in button_names]
+        return all(button_states)
+    
+    def are_any_pressed(self, *button_names: str) -> bool:
+        button_states = [self.is_pressed(button_name) for button_name in button_names]
+        return any(button_states)
+    
+    def are_all_held(self, *button_names: str) -> bool:
+        button_states = [self.is_held(button_name) for button_name in button_names]
+        return all(button_states)
+
+    def are_any_held(self, *button_names: str) -> bool:
+        button_states = [self.is_held(button_name) for button_name in button_names]
+        return any(button_states)    
     
     def sensitivity_factor(self) -> float:
         if self.low_sensitivity_mode == True:
@@ -45,7 +78,6 @@ class Controller:
         return self.stick.getRawAxis(controller['AXIS_RIGHT_X']) < -0.2
     
     def send_to_shoot(self) -> bool:
-        print(self.stick.getRawAxis(controller['AXIS_RIGHT_X']) > 0.2)
         return self.stick.getRawAxis(controller['AXIS_RIGHT_X']) > 0.2
     
     def release_gamepiece(self) -> bool:
@@ -59,10 +91,3 @@ class Controller:
     
     def toggle_low_sensitivity_mode(self) -> bool:
         self.low_sensitivity_mode = not self.low_sensitivity_mode
-
-    def climb_up(self) -> bool:
-        return self.stick.getRawButton(controller['RB_BUTTON'])
-
-    def climb_down(self) -> bool:
-        return self.stick.getRawButton(controller['LB_BUTTON'])
-    

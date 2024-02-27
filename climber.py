@@ -1,5 +1,6 @@
 import phoenix5 as ctre
 import wpilib
+from controller import Controller
 
 C_LEFT = 3
 C_RIGHT = 4
@@ -32,6 +33,14 @@ class Climber:
         self.m_right.setInverted(True)
 
         self.climber_motors = wpilib.MotorControllerGroup(self.m_left, self.m_right)
+
+    def teleop_control(self, controller: Controller):       
+        if controller.is_held('RB_BUTTON'):
+            self.climb_up()
+        if controller.is_held('LB_BUTTON'):
+            self.climb_down()
+        if not controller.are_any_held('RB_BUTTON', 'LB_BUTTON'):
+            self.stop()
 
     def update_end_switches(self):
         self.end_lower_l_value = not self.end_lower_l.get()
