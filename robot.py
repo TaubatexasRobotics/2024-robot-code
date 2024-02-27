@@ -29,6 +29,7 @@ class MyRobot(wpilib.TimedRobot):
         self.arm = Arm()
         self.shooter = Shooter()
         self.climber = Climber()
+        self.mechanisms = [self.drivetrain, self.arm, self.shooter, self.climber]
         self.timer = wpilib.Timer()
 
         self.task_count = 0
@@ -100,29 +101,12 @@ class MyRobot(wpilib.TimedRobot):
             log_exception(e)
 
     def teleopPeriodic(self) -> None:
-        try:
-            self.drivetrain.move( *self.controller.get_drive() )
-        except BaseException as e: 
-            log_exception(e)
-        
-        try:
-            if ONLY_DRIVETRAIN_MODE:
-                return
-            
-            if self.controller.sensitivity_toggle_button():
-                self.controller.toggle_low_sensitivity_mode()
+        for mechanism in self.mechanisms:
+            try:
+                mechanism.teleop_control(self.controller)
+            except BaseException as e:
+                log_exception(e)
 
-            self.climber.teleop_control(self.controller)
-            self.arm.teleop_control(self.controller)
-            self.shooter.teleop_control(self.controller)
-
-
-
-
-
-        except BaseException as e: 
-            log_exception(e)
-        
     def autonomousInit(self) -> None:
         try:
             self.drivetrain.differential_drive.setSafetyEnabled(True)

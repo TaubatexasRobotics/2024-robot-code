@@ -62,17 +62,13 @@ class Controller:
         rt_value = self.stick.getRawAxis(controller['AXIS_RIGHT_TRIGGER'])
         lt_value = self.stick.getRawAxis(controller['AXIS_LEFT_TRIGGER'])
         combined_value = lt_value - rt_value
+
+        sensitivity_factor = self.sensitivity_factor()
         
-        forward_speed = combined_value * self.sensitivity_factor()
-        rotation_speed = self.stick.getRawAxis(controller['AXIS_LEFT_X']) * self.sensitivity_factor()
+        forward_speed = combined_value * sensitivity_factor
+        rotation_speed = self.stick.getRawAxis(controller['AXIS_LEFT_X']) * sensitivity_factor
 
         return forward_speed , rotation_speed
-    
-    def move_angle(self) -> float:
-        return self.stick.getRawAxis(controller['AXIS_RIGHT_Y'])
-    
-    def sensitivity_toggle_button(self) -> bool:
-        return self.stick.getRawButtonPressed(controller['SELECT_BUTTON'])
     
     def toggle_low_sensitivity_mode(self) -> bool:
         self.low_sensitivity_mode = not self.low_sensitivity_mode

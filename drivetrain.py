@@ -4,6 +4,8 @@ import wpimath.controller
 import wpimath.geometry
 import wpimath.kinematics
 
+from controller import Controller
+
 from navx import AHRS
 
 import rev
@@ -49,6 +51,12 @@ class Drivetrain:
         rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
+
+    def teleop_control(self, controller: Controller) -> None:
+        if controller.is_pressed('SELECT_BUTTON'):
+            controller.toggle_low_sensitivity_mode()
+        
+        self.move( *controller.get_drive() )
 
     def set_stop_distance(self):
         self.stop_distance = self.get_distance()
