@@ -65,6 +65,11 @@ class MyRobot(wpilib.TimedRobot):
             self.smartdashboard.putNumber("Left Distance", right_distance)
             self.smartdashboard.putNumber("Left Volts", left_voltage)
 
+            self.smartdashboard.putBoolean("Climber left end", self.climber.end_lower_l_value)
+            self.smartdashboard.putBoolean("Climber right end", self.climber.end_lower_r_value)
+            self.smartdashboard.putBoolean("Climber left upper end", self.climber.end_upper_l_value)
+            self.smartdashboard.putBoolean("Climber right upper end", self.climber.end_upper_r_value)
+
             self.smartdashboard.putNumber("Right Distance", self.drivetrain.get_right_distance())
             self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
             self.smartdashboard.putNumber("Right Volts", right_voltage)
@@ -88,6 +93,7 @@ class MyRobot(wpilib.TimedRobot):
         
     def teleopInit(self) -> None:
         try:
+            self.climber.update_end_switches()
             self.drivetrain.differential_drive.setSafetyEnabled(True)
             self.arm.reset_angle_encoder()
         except BaseException as e:
@@ -126,15 +132,12 @@ class MyRobot(wpilib.TimedRobot):
 
             if self.controller.climb_up():
                 self.climber.climb_up()
-                print("climb_up")
 
             if self.controller.climb_down():
                 self.climber.climb_down()
-                print("climb_down")
 
             if not self.controller.climb_up() and not self.controller.climb_down():
                 self.climber.stop()
-                print("stop")
 
         except BaseException as e: 
             log_exception(e)
@@ -180,6 +183,7 @@ class MyRobot(wpilib.TimedRobot):
         
         try:
             self.arm.stop_arm_angle()
+            # self.climber.home()
         except BaseException as e:
             log_exception(e)
 
