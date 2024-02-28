@@ -33,64 +33,20 @@ class MyRobot(wpilib.TimedRobot):
         self.timer = wpilib.Timer()
 
         self.task_count = 0
-        # self.high_angle = 1
 
-        self.high_angle = -11.404823303222656
-
-        self.mid_angle = -12.38
-        self.low_angle = -2.098
         wpilib.CameraServer.launch()
-
         self.smartdashboard = wpilib.SmartDashboard
-        self.field = wpilib.Field2d()
-        
-        leftPosition = self.drivetrain.get_left_distance()
-        rightPosition = self.drivetrain.get_right_distance()
-        
+                
         self.arm.stop_arm_angle()
-
-        self.smartdashboard.putNumber("Mid Angle", self.mid_angle)
-        self.smartdashboard.putNumber("Comunity Angle", self.high_angle)
-        self.smartdashboard.putNumber("Low Angle", self.low_angle)
         
     #update the dashboard
     def robotPeriodic(self) -> None:
-        try:
-            left_distance = self.drivetrain.get_left_distance()
-            right_distance = self.drivetrain.get_right_distance()
-            
-            self.smartdashboard.putNumber("Angle", self.arm.get_angle_position())
-                    
-            left_voltage, right_voltage = self.drivetrain.get_motors_voltage()
-            self.smartdashboard.putNumber("Left Pulses", left_distance)
-            self.smartdashboard.putNumber("Left Distance", right_distance)
-            self.smartdashboard.putNumber("Left Volts", left_voltage)
+        for mechanism in self.mechanisms:
+            try:
+                mechanism.update_dashboard(self.smartdashboard)              
 
-            self.smartdashboard.putBoolean("Climber left end", self.climber.end_lower_l_value)
-            self.smartdashboard.putBoolean("Climber right end", self.climber.end_lower_r_value)
-            self.smartdashboard.putBoolean("Climber left upper end", self.climber.end_upper_l_value)
-            self.smartdashboard.putBoolean("Climber right upper end", self.climber.end_upper_r_value)
-
-            self.smartdashboard.putNumber("Right Distance", self.drivetrain.get_right_distance())
-            self.smartdashboard.putNumber("Distance", self.drivetrain.get_distance())
-            self.smartdashboard.putNumber("Right Volts", right_voltage)
-            
-            self.smartdashboard.putNumber("Pitch", self.drivetrain.get_pitch())
-            
-            self.smartdashboard.putData("NavX", self.drivetrain.navx)
-            self.smartdashboard.putData("PID", self.drivetrain.reference_pid_controller)
-            
-            self.drivetrain.update_odometry()
-            self.field.setRobotPose(self.drivetrain.get_pose())
-            self.smartdashboard.putData("Field", self.field)
-
-            self.mid_angle = self.smartdashboard.getNumber("Mid Angle", self.mid_angle)
-            self.high_angle = self.smartdashboard.getNumber("Comunity Angle", self.high_angle)
-
-            self.low_angle = self.smartdashboard.getNumber("Low Angle", self.low_angle)
-
-        except BaseException as e:
-            log_exception(e)
+            except BaseException as e:
+                log_exception(e)
         
     def teleopInit(self) -> None:
         try:

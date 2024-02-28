@@ -19,6 +19,9 @@ class Shooter:
         self.motors = wpilib.MotorControllerGroup(self.m_lower, self.m_upper)
         self.motors.setInverted(True)
 
+    def update_dashboard(self, dashboard) -> None:
+        pass
+
     def teleop_control(self, controller: Controller) -> None:
         if controller.is_held('X_BUTTON'):
             self.catch_gamepiece()

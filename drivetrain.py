@@ -44,6 +44,8 @@ class Drivetrain:
         self.navx = AHRS.create_spi()
         self.navx.reset()
 
+        self.field = wpilib.Field2d()
+
         self.reference_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         self.left_pid_controller = wpimath.controller.PIDController(0, 0, 0)
         self.right_pid_controller = wpimath.controller.PIDController(0, 0, 0)
@@ -51,6 +53,28 @@ class Drivetrain:
         rotation = wpimath.geometry.Rotation2d.fromDegrees(self.navx.getAngle())
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
+
+    def update_dashboard(self, dashboard) -> None:
+        left_distance = self.get_left_distance()
+        right_distance = self.get_right_distance()
+        left_voltage, right_voltage = self.get_motors_voltage()
+
+        dashboard.putNumber("Left Pulses", left_distance)
+        dashboard.putNumber("Left Distance", right_distance)
+        dashboard.putNumber("Left Volts", left_voltage)
+        dashboard.putNumber("Right Volts", right_voltage)
+
+        dashboard.putNumber("Right Distance", self.get_right_distance())
+        dashboard.putNumber("Distance", self.get_distance())
+
+        dashboard.putNumber("Pitch", self.get_pitch())
+        dashboard.putData("NavX", self.navx)
+        dashboard.putData("PID", self.reference_pid_controller)
+
+        self.field.setRobotPose(self.get_pose())
+        dashboard.putData("Field", self.field)
+        
+        self.update_odometry()
 
     def teleop_control(self, controller: Controller) -> None:
         if controller.is_pressed('SELECT_BUTTON'):

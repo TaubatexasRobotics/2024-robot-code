@@ -31,12 +31,23 @@ class Arm:
         self.angle_pid.setI(ARM_ANGLE_PID["KI"])
         self.angle_pid.setD(ARM_ANGLE_PID["KD"])
 
+        self.high_angle = -11.404823303222656
+        self.mid_angle = -12.38
+        self.low_angle = -2.098
+
         #set angle smart motion constants
         # self.angle_pid.setSmartMotionMaxVelocity(ARM_ANGLE_PID["MAX_VELOCITY"])
         # self.angle_pid.setSmartMotionMaxAccel(ARM_ANGLE_PID["MAX_ACCELERATION"])
         # self.angle_pid.setSmartMotionAllowedClosedLoopError(ARM_ANGLE_PID["ALLOWABLE_ERROR"])
 
         # self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
+
+    def update_dashboard(self, dashboard) -> None:
+        dashboard.putNumber("Angle", self.get_angle_position())
+        self.mid_angle = dashboard.getNumber("Mid Angle", self.mid_angle)
+        self.high_angle = dashboard.getNumber("Comunity Angle", self.high_angle)
+        self.low_angle = dashboard.getNumber("Low Angle", self.low_angle)
+
 
     def teleop_control(self, controller) -> None:
         if not controller.are_any_held('A_BUTTON', 'Y_BUTTON'):

@@ -34,6 +34,12 @@ class Climber:
 
         self.climber_motors = wpilib.MotorControllerGroup(self.m_left, self.m_right)
 
+    def update_dashboard(self, dashboard):
+        dashboard.putBoolean("Climber left end", self.end_lower_l_value)
+        dashboard.putBoolean("Climber right end", self.end_lower_r_value)
+        dashboard.putBoolean("Climber left upper end", self.end_upper_l_value)
+        dashboard.putBoolean("Climber right upper end", self.end_upper_r_value)
+
     def teleop_control(self, controller: Controller):       
         if controller.is_held('RB_BUTTON'):
             self.climb_up()
