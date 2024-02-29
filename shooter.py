@@ -25,7 +25,7 @@ class Shooter:
         self.motors.setInverted(True)
 
     def update_dashboard(self, dashboard) -> None:
-        pass
+        dashboard.putBoolean("Detect Note", self.detect_note.get())
 
     def teleop_control(self, controller: Controller) -> None:
         if not self.detect_note.get():
