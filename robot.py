@@ -76,34 +76,34 @@ class MyRobot(wpilib.TimedRobot):
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
-        distance = self.drivetrain.get_distance()
-        try:
-            if self.task_count == 0:
-                self.drivetrain.move_straight(AUTONOMOUS_SPEED)
-                if self.timer.get() > 0.8:
-                    self.drivetrain.idle()
-                    self.drivetrain.reset_encoders()
-                    self.task_count += 1
-                return
+        # distance = self.drivetrain.get_distance()
+        # try:
+        #     if self.task_count == 0:
+        #         self.drivetrain.move_straight(AUTONOMOUS_SPEED)
+        #         if self.timer.get() > 0.8:
+        #             self.drivetrain.idle()
+        #             self.drivetrain.reset_encoders()
+        #             self.task_count += 1
+        #         return
 
-            if self.task_count == 1:
-                if distance > -2.40:
-                    self.drivetrain.move_straight(-self.auto_speed)
+        #     if self.task_count == 1:
+        #         if distance > -2.40:
+        #             self.drivetrain.move_straight(-self.auto_speed)
 
-                elif distance < -2:
-                    self.drivetrain.move_straight(self.auto_speed)
-                    self.auto_speed = self.auto_speed*.99
-                else:
-                    self.drivetrain.idle()
+        #         elif distance < -2:
+        #             self.drivetrain.move_straight(self.auto_speed)
+        #             self.auto_speed = self.auto_speed*.99
+        #         else:
+        #             self.drivetrain.idle()
 
-                if ONLY_DRIVETRAIN_MODE:
-                    return
-        except BaseException as e:
-            log_exception(e)
+                # if ONLY_DRIVETRAIN_MODE:
+                #     return
+        # except BaseException as e:
+        #     log_exception(e)
         
         try:
             self.arm.stop_arm_angle()
-            # self.climber.home()
+            self.climber.home()
         except BaseException as e:
             log_exception(e)
 
