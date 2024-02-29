@@ -54,6 +54,10 @@ class Drivetrain:
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
 
+    def robotPeriodic(self) -> None:
+        self.update_odometry()
+        self.angle = self.navx.getAngle()
+
     def update_dashboard(self, dashboard) -> None:
         left_distance = self.get_left_distance()
         right_distance = self.get_right_distance()
@@ -84,6 +88,15 @@ class Drivetrain:
 
     def set_stop_distance(self):
         self.stop_distance = self.get_distance()
+
+    def turn_to_angle(self, targetAngle):
+        error = 5
+        if self.angle < targetAngle - error:
+            self.make_turn(0.3)
+        elif self.angle > targetAngle + error:
+            self.make_turn(-0.3)
+        else:
+            self.idle()
 
     def stop(self):
         self.kp = 100

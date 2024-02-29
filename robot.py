@@ -39,11 +39,11 @@ class MyRobot(wpilib.TimedRobot):
                 
         self.arm.stop_arm_angle()
         
-    #update the dashboard
     def robotPeriodic(self) -> None:
+        self.drivetrain.robotPeriodic()
         for mechanism in self.mechanisms:
             try:
-                mechanism.update_dashboard(self.smartdashboard)              
+                mechanism.update_dashboard(self.smartdashboard)
 
             except BaseException as e:
                 log_exception(e)
@@ -102,6 +102,7 @@ class MyRobot(wpilib.TimedRobot):
         #     log_exception(e)
         
         try:
+            # self.drivetrain.turn_to_angle(150)
             self.arm.stop_arm_angle()
             self.climber.home()
         except BaseException as e:
