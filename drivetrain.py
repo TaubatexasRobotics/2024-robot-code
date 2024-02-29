@@ -54,9 +54,17 @@ class Drivetrain:
         initial_pose = wpimath.geometry.Pose2d(*INITIAL_POSE)
         self.odometry = wpimath.kinematics.DifferentialDriveOdometry(rotation, 0, 0, initial_pose)
 
+        #for the angle seeking routine
+        self.previous_is_greater_than_targert = False
+        self.change_count = 0
+
     def robotPeriodic(self) -> None:
         self.update_odometry()
         self.angle = self.navx.getAngle()
+
+    def autonomousInit(self) -> None:
+        self.previous_is_greater_than_targert = False
+        self.change_count = 0
 
     def update_dashboard(self, dashboard) -> None:
         left_distance = self.get_left_distance()
@@ -89,14 +97,21 @@ class Drivetrain:
     def set_stop_distance(self):
         self.stop_distance = self.get_distance()
 
-    def turn_to_angle(self, targetAngle):
-        error = 5
-        if self.angle < targetAngle - error:
-            self.make_turn(0.3)
-        elif self.angle > targetAngle + error:
-            self.make_turn(-0.3)
+    def seek_angle(self, angle):
+        error = 0.1
+        initial_power = 0.3
+        decay = 0.95
+        if self.angle < angle - error:
+            self.is_greater_than_targert = False
+            self.make_turn(initial_power * decay**self.change_count)
+        elif self.angle > angle + error:
+            self.is_greater_than_targert = True
+            self.make_turn(-initial_power * decay**self.change_count)
         else:
             self.idle()
+        if self.previous_is_greater_than_targert != self.is_greater_than_targert:
+            self.change_count += 1
+        self.previous_is_greater_than_targert = self.is_greater_than_targert
 
     def stop(self):
         self.kp = 100

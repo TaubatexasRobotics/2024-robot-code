@@ -73,6 +73,8 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.set_stop_distance()
             self.auto_speed = AUTONOMOUS_SPEED
 
+            self.drivetrain.autonomousInit()
+
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
@@ -102,7 +104,7 @@ class MyRobot(wpilib.TimedRobot):
         #     log_exception(e)
         
         try:
-            # self.drivetrain.turn_to_angle(150)
+            # self.drivetrain.seek_angle(150)
             self.arm.stop_arm_angle()
             self.climber.home()
         except BaseException as e:
