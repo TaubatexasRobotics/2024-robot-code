@@ -1,7 +1,7 @@
 import wpilib
 from joystick_profiles import joysticks
 joysticks_profile = 'xbox_controller'
-controller = joysticks[joysticks_profile]
+joystick_map = joysticks[joysticks_profile]
 
 LOW_SENSITIVITY_FACTOR = 0.6
 
@@ -9,16 +9,16 @@ class Controller:
     def __init__(self, joystick_port=0):
         self.stick = wpilib.Joystick(joystick_port)
         self.low_sensitivity_mode = False
-        self.controller = controller
+        self.joystick_map = joystick_map
 
     def is_pressed(self, button_name: str) -> bool:
-        return self.stick.getRawButtonPressed(controller[button_name])
+        return self.stick.getRawButtonPressed(joystick_map[button_name])
     
     def is_released(self, button_name: str) -> bool:
-        return self.stick.getRawButtonReleased(controller[button_name])
+        return self.stick.getRawButtonReleased(joystick_map[button_name])
     
     def is_held(self, button_name: str) -> bool:
-        return self.stick.getRawButton(controller[button_name])
+        return self.stick.getRawButton(joystick_map[button_name])
     
     def are_all_released(self, *button_names: str) -> bool:
         button_states = [self.is_released(button_name) for button_name in button_names]
@@ -45,7 +45,7 @@ class Controller:
         return any(button_states)
     
     def axis_value(self, axis_name:str) -> bool:
-        axis_value = self.stick.getRawAxis(self.controller[axis_name])
+        axis_value = self.stick.getRawAxis(joystick_map[axis_name])
         return axis_value
     
     def axis_to_digital(self, axis_name: str, threshold: float) -> bool:
