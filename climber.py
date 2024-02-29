@@ -7,10 +7,10 @@ C_RIGHT = 4
 
 CLIMBER_SPEED = 1
 
-PORT_LOWER_L = 1
-PORT_LOWER_R = 2
-PORT_UPPER_L = 3
-PORT_UPPER_R = 4
+PORT_LOWER_L = 2
+PORT_LOWER_R = 3
+PORT_UPPER_L = 4
+PORT_UPPER_R = 1
 
 class Climber:
     def __init__(self):
@@ -35,10 +35,10 @@ class Climber:
         self.climber_motors = wpilib.MotorControllerGroup(self.m_left, self.m_right)
 
     def update_dashboard(self, dashboard):
-        dashboard.putBoolean("Climber left end", self.end_lower_l_value)
-        dashboard.putBoolean("Climber right end", self.end_lower_r_value)
-        dashboard.putBoolean("Climber left upper end", self.end_upper_l_value)
-        dashboard.putBoolean("Climber right upper end", self.end_upper_r_value)
+        dashboard.putBoolean("Climber left lower end", self.end_lower_l.get())
+        dashboard.putBoolean("Climber right lower", self.end_lower_r.get())
+        dashboard.putBoolean("Climber left upper end", self.end_upper_l.get())
+        dashboard.putBoolean("Climber right upper end", self.end_upper_r.get())
 
     def teleop_control(self, controller: Controller):
         if controller.is_held('RB_BUTTON'):
@@ -56,21 +56,33 @@ class Climber:
 
     def climb_up(self):
         self.update_end_switches()
-        if not self.end_upper_l_value and not self.end_upper_l_value:
-            self.climber_motors.set(CLIMBER_SPEED)
+        if not self.end_upper_l_value:
+            self.m_left.set(CLIMBER_SPEED)
+        else:
+            self.m_left.set(0)
+        
+        if not self.end_upper_r_value:
+            self.m_right.set(CLIMBER_SPEED)
+        else:
+            self.m_right.set(0)
 
     def stop(self):
         self.climber_motors.set(0)
 
     def climb_down(self):
-        if not self.end_lower_l_value and not self.end_lower_r_value:
-            self.climber_motors.set(-CLIMBER_SPEED)
-
-    def home(self):
+        self.update_end_switches()
         if not self.end_lower_l_value:
             self.m_left.set(-CLIMBER_SPEED)
+        else:
+            self.m_left.set(0)
+        
         if not self.end_lower_r_value:
             self.m_right.set(-CLIMBER_SPEED)
-        if self.end_lower_l_value and self.end_lower_r_value:
-            self.stop()
+        else:
+            self.m_right.set(0)
+
+    def home(self):
+        self.update_end_switches()
+        self.climb_down()
+        if self.end_lower_l_value and self.end_upper_r_value:
             self.is_homed = True
