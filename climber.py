@@ -7,10 +7,10 @@ C_RIGHT = 4
 
 CLIMBER_SPEED = 1
 
-PORT_LOWER_L = 0
-PORT_LOWER_R = 1
-PORT_UPPER_L = 2
-PORT_UPPER_R = 3
+PORT_LOWER_L = 1
+PORT_LOWER_R = 2
+PORT_UPPER_L = 3
+PORT_UPPER_R = 4
 
 class Climber:
     def __init__(self):
@@ -40,7 +40,7 @@ class Climber:
         dashboard.putBoolean("Climber left upper end", self.end_upper_l_value)
         dashboard.putBoolean("Climber right upper end", self.end_upper_r_value)
 
-    def teleop_control(self, controller: Controller):       
+    def teleop_control(self, controller: Controller):
         if controller.is_held('RB_BUTTON'):
             self.climb_up()
         if controller.is_held('LB_BUTTON'):
