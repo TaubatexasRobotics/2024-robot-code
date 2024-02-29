@@ -43,7 +43,7 @@ class Arm:
         # self.angle_limit_switch = wpilib.DigitalInput(ANGLE_SWITCH_PORT)
 
     def update_dashboard(self, dashboard) -> None:
-        dashboard.putNumber("Angle", self.get_angle_position())
+        dashboard.putNumber("Arm Angle", self.get_angle_position())
         self.mid_angle = dashboard.getNumber("Mid Angle", self.mid_angle)
         self.high_angle = dashboard.getNumber("Comunity Angle", self.high_angle)
         self.low_angle = dashboard.getNumber("Low Angle", self.low_angle)
