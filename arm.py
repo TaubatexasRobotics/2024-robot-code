@@ -2,11 +2,11 @@ import rev
 
 ARM_ANGLE_SPARK_ID = 54
 
-LIMIT_ANGLE_FORWARD = 0
-LIMIT_ANGLE_BACKWARD = 17
+# LIMIT_ANGLE_FORWARD = 0
+# LIMIT_ANGLE_BACKWARD = 17
 
 ARM_ANGLE_PID = {
-    "KP" : 0.1,
+    "KP" : 1,
     "KI" : 0.0,
     "KD" : 0.1,
     "MAX_VELOCITY" : 2000,
@@ -14,7 +14,7 @@ ARM_ANGLE_PID = {
     "ALLOWABLE_ERROR" : 0
 }
 
-ANGLE_HOMING_DUTY_CYCLE = 0.17
+ANGLE_HOMING_DUTY_CYCLE = 0.30
 
 class Arm:     
     def __init__(self):
@@ -57,12 +57,12 @@ class Arm:
         if controller.is_held('Y_BUTTON'):
             self.increase_arm_angle()
 
-    def home_angle(self, duty_cycle:float = ANGLE_HOMING_DUTY_CYCLE) -> None:
-        if self.angle_switch_is_pressed():
-            self.set_angle_duty_cycle(0)
-            self.angle_is_homed = True
-        else:
-            self.set_angle_duty_cycle(duty_cycle)
+    # def home_angle(self, duty_cycle:float = ANGLE_HOMING_DUTY_CYCLE) -> None:
+    #     if self.angle_switch_is_pressed():
+    #         self.set_angle_duty_cycle(0)
+    #         self.angle_is_homed = True
+    #     else:
+    #         self.set_angle_duty_cycle(duty_cycle)
     
     def get_angle_position(self) -> float:
         return self.angle_encoder.getPosition()
