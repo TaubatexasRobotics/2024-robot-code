@@ -6,7 +6,7 @@ from shooter import Shooter
 
 import wpilib
 
-AUTONOMOUS_SPEED = 0.65
+AUTONOMOUS_SPEED = 0.45
 AUTONOMOUS_DISTANCE = -2.4
 AUTONOMOUS_MAX_DISTANCE =-3
 
@@ -34,7 +34,7 @@ class MyRobot(wpilib.TimedRobot):
 
         self.task_count = 0
 
-        wpilib.CameraServer.launch()
+        # wpilib.CameraServer.launch()
         self.smartdashboard = wpilib.SmartDashboard
                 
         self.arm.stop_arm_angle()

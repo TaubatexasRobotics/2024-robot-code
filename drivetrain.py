@@ -15,6 +15,7 @@ C_RIGHT_FRONT = 53
 C_RIGHT_BACK = 51
 C_LEFT_FRONT = 50
 C_LEFT_BACK = 52
+CONVERSION_FACTOR = 1/22.66
 
 # ENCODER_DISTANCE_PER_PULSE = 3.05/3925
 INITIAL_POSE = (0, 0, 0) # (x, y, theta)
@@ -35,8 +36,8 @@ class Drivetrain:
         self.encoder_left = self.m_left_back.getEncoder()
         self.encoder_right = self.m_right_back.getEncoder()
 
-        self.encoder_left.setPositionConversionFactor(1)
-        self.encoder_right.setPositionConversionFactor(1)
+        self.encoder_left.setPositionConversionFactor(CONVERSION_FACTOR)
+        self.encoder_right.setPositionConversionFactor(CONVERSION_FACTOR)
         
         self.encoder_left.setPosition(0)
         self.encoder_right.setPosition(0)
@@ -136,7 +137,7 @@ class Drivetrain:
         self.encoder_right.setPosition(0)
 
     def get_distance(self):
-        return (self.encoder_left.getPosition() + self.encoder_right.getPosition()) / 2
+        return (self.get_left_distance() + self.get_right_distance()) / 2
     
     def get_left_distance(self):
         return self.encoder_left.getPosition()
@@ -150,6 +151,9 @@ class Drivetrain:
         
     def get_pose(self):
         return self.odometry.getPose()
+
+    def get_yaw(self):
+        return self.navx.getAngle()
     
     def get_pitch(self):
         return self.navx.getPitch()
