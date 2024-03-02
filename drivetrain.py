@@ -15,6 +15,7 @@ C_RIGHT_FRONT = 53
 C_RIGHT_BACK = 51
 C_LEFT_FRONT = 50
 C_LEFT_BACK = 52
+
 CONVERSION_FACTOR = 1/22.66
 
 # ENCODER_DISTANCE_PER_PULSE = 3.05/3925
@@ -98,16 +99,18 @@ class Drivetrain:
     def set_stop_distance(self):
         self.stop_distance = self.get_distance()
 
-    def seek_angle(self, angle):
-        error = 0.1
+    def seek_angle(self, target_angle, error=0.1):
         initial_power = 0.3
         decay = 0.95
-        if self.angle < angle - error:
+        invert = 1
+        if abs(self.angle - target_angle) > 180:
+            invert = -1
+        if self.angle < target_angle - error:
             self.is_greater_than_targert = False
-            self.make_turn(initial_power * decay**self.change_count)
-        elif self.angle > angle + error:
+            self.make_turn(initial_power * decay**self.change_count * invert)
+        elif self.angle > target_angle + error:
             self.is_greater_than_targert = True
-            self.make_turn(-initial_power * decay**self.change_count)
+            self.make_turn(-initial_power * decay**self.change_count * invert)
         else:
             self.idle()
         if self.previous_is_greater_than_targert != self.is_greater_than_targert:
@@ -160,7 +163,7 @@ class Drivetrain:
     
     def get_roll(self):
         return self.navx.getRoll()
-    
+
     def set_tank_drive_volts(self, leftVolts, rightVolts):
         self.m_left.setVoltage(leftVolts)
         self.m_right.setVoltage(-rightVolts)
