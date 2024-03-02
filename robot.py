@@ -73,42 +73,52 @@ class MyRobot(wpilib.TimedRobot):
             self.drivetrain.set_stop_distance()
             self.auto_speed = AUTONOMOUS_SPEED
 
+            self.initial_angle = self.drivetrain.get_yaw()
+
             self.drivetrain.autonomousInit()
 
         except BaseException as e:
             log_exception(e)
     def autonomousPeriodic(self) -> None:
-        # distance = self.drivetrain.get_distance()
-        # try:
-        #     if self.task_count == 0:
-        #         self.drivetrain.move_straight(AUTONOMOUS_SPEED)
-        #         if self.timer.get() > 0.8:
-        #             self.drivetrain.idle()
-        #             self.drivetrain.reset_encoders()
-        #             self.task_count += 1
-        #         return
-
-        #     if self.task_count == 1:
-        #         if distance > -2.40:
-        #             self.drivetrain.move_straight(-self.auto_speed)
-
-        #         elif distance < -2:
-        #             self.drivetrain.move_straight(self.auto_speed)
-        #             self.auto_speed = self.auto_speed*.99
-        #         else:
-        #             self.drivetrain.idle()
-
-                # if ONLY_DRIVETRAIN_MODE:
-                #     return
-        # except BaseException as e:
-        #     log_exception(e)
-        
         try:
-            # self.drivetrain.seek_angle(150)
-            self.arm.stop_arm_angle()
-            self.climber.home()
+            if self.task_count == 0:
+                self.shooter.shoot()
+                if self.timer.get() > 0.8:
+                    self.shooter.stop_shooter()
+                    self.task_count += 1
+                return
+
+            if self.task_count == 1:
+                self.drivetrain.move_straight(-AUTONOMOUS_SPEED)
+                # if self.timer.get() > 0.8:
+                if self.drivetrain.get_right_distance()<-3.2:
+                    self.drivetrain.idle()
+                    self.drivetrain.reset_encoders()
+                    self.task_count += 1
+                return
+                # self.drivetrain.seek_angle(self.initial_angle + 45)
+                pass
+                # if distance > -2.40:
+                #     self.drivetrain.move_straight(-self.auto_speed)
+
+                # elif distance < -2:
+                #     self.drivetrain.move_straight(self.auto_speed)
+                #     self.auto_speed = self.auto_speed*.99
+                # else:
+                #     self.drivetrain.idle()
+
+                if ONLY_DRIVETRAIN_MODE:
+                    return
         except BaseException as e:
             log_exception(e)
+        
+        # try:
+            # self.drivetrain.seek_angle(150)
+            # self.arm.stop_arm_angle()
+            # self.climber.home()
+
+        # except BaseException as e:
+        #     log_exception(e)
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
