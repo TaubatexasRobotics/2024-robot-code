@@ -83,8 +83,11 @@ class MyRobot(wpilib.TimedRobot):
         try:
             if self.task_count == 0:
                 self.shooter.shoot()
-                if self.timer.get() > 0.8:
+                if self.timer.get() > 2:
+                    self.shooter.store_gamepiece()
+                if self.timer.get() > 4:
                     self.shooter.stop_shooter()
+                    self.shooter.stop_shooter_feeder()
                     self.task_count += 1
                 return
 

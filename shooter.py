@@ -42,7 +42,7 @@ class Shooter:
         if controller.axis_to_digital('AXIS_RIGHT_X', -0.2):
             self.store_gamepiece()
         if controller.axis_to_digital('AXIS_RIGHT_X', 0.2):
-            self.send_to_shoot()
+            self.feed_shooter()
         if controller.axis_between('AXIS_RIGHT_X', -0.2, 0.2):
             self.stop_shooter_feeder()
 
@@ -58,7 +58,7 @@ class Shooter:
     def store_gamepiece(self):
         self.m_feeder.set(SHOOT_SPEED)
 
-    def send_to_shoot(self):
+    def feed_shooter(self):
         self.m_feeder.set(-SHOOT_SPEED)
 
     def stop_shooter_feeder(self):
