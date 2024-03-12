@@ -1,8 +1,8 @@
 from drivetrain import Drivetrain
-from arm import Arm
 from climber import Climber
 from controller import Controller
 from shooter import Shooter
+from intake import Intake
 
 import wpilib
 
@@ -26,10 +26,10 @@ class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
         self.controller = Controller()
         self.drivetrain = Drivetrain()
-        self.arm = Arm()
         self.shooter = Shooter()
         self.climber = Climber()
-        self.mechanisms = [self.drivetrain, self.arm, self.shooter, self.climber]
+        self.intake = Intake()
+        self.mechanisms = [self.drivetrain, self.intake, self.shooter, self.climber]
         self.timer = wpilib.Timer()
 
         self.task_count = 0
@@ -37,7 +37,6 @@ class MyRobot(wpilib.TimedRobot):
         # wpilib.CameraServer.launch()
         self.smartdashboard = wpilib.SmartDashboard
                 
-        self.arm.stop_arm_angle()
         
     def robotPeriodic(self) -> None:
         self.drivetrain.robotPeriodic()
@@ -52,7 +51,6 @@ class MyRobot(wpilib.TimedRobot):
         try:
             self.climber.update_end_switches()
             self.drivetrain.differential_drive.setSafetyEnabled(True)
-            self.arm.reset_angle_encoder()
         except BaseException as e:
             log_exception(e)
 
@@ -117,8 +115,6 @@ class MyRobot(wpilib.TimedRobot):
         
         # try:
             # self.drivetrain.seek_angle(150)
-            # self.arm.stop_arm_angle()
-            # self.climber.home()
 
         # except BaseException as e:
         #     log_exception(e)

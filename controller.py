@@ -1,6 +1,6 @@
 import wpilib
 from joystick_profiles import joysticks
-joysticks_profile = 'xbox_controller'
+joysticks_profile = 'playstation_dualshock_4'
 joystick_map = joysticks[joysticks_profile]
 
 LOW_SENSITIVITY_FACTOR = 0.6

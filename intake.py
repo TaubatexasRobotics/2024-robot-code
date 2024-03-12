@@ -4,8 +4,8 @@ from controller import Controller
 
 C_INNER = 12
 
-C_LOWER = 3
-C_UPPER = 4
+C_FRONT = 3
+C_BACK = 12
 
 PORT_SENSOR_DETECT_NOTE = 0
 PORT_LIGHT_DETECT_NOTE = 0
@@ -14,12 +14,12 @@ RECIEVE_SPEED = 0.6
 
 class Intake:
     def __init__(self):
-        self.m_lower = ctre.WPI_VictorSPX(C_LOWER)
-        self.m_upper = ctre.WPI_VictorSPX(C_UPPER)
+        self.m_front = ctre.WPI_VictorSPX(C_BACK)
+        self.m_lower = ctre.WPI_VictorSPX(C_FRONT)
         self.detect_note = wpilib.DigitalInput(PORT_SENSOR_DETECT_NOTE)
         self.light_detect_note = wpilib.Relay(PORT_LIGHT_DETECT_NOTE)
 
-        self.motors = wpilib.MotorControllerGroup(self.m_lower, self.m_upper)
+        self.motors = wpilib.MotorControllerGroup(self.m_lower, self.m_front)
         self.motors.setInverted(True)
 
     def update_dashboard(self, dashboard) -> None:

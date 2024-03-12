@@ -2,7 +2,7 @@ import phoenix5 as ctre
 import wpilib
 from controller import Controller
 
-C_LEFT = 3
+C_LEFT = 1
 C_RIGHT = 4
 
 CLIMBER_SPEED = 1

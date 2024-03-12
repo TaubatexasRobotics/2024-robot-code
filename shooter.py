@@ -2,7 +2,7 @@ import phoenix5 as ctre
 import wpilib
 from controller import Controller
 
-C_LOWER = 1
+C_LOWER = 5
 C_UPPER = 2
 
 SHOOT_SPEED = 1
@@ -16,7 +16,8 @@ class Shooter:
         self.motors.setInverted(True)
 
     def update_dashboard(self, dashboard) -> None:
-        dashboard.putBoolean("Detect Note", self.detect_note.get())
+        pass
+        # dashboard.putBoolean("Detect Note", self.detect_note.get())
 
     def teleop_control(self, controller: Controller) -> None:
         # if not self.detect_note.get():
