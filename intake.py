@@ -10,7 +10,7 @@ C_BACK = 12
 PORT_SENSOR_DETECT_NOTE = 0
 PORT_LIGHT_DETECT_NOTE = 0
 
-RECIEVE_SPEED = 0.6
+RECIEVE_SPEED = 0.8
 
 class Intake:
     def __init__(self):
