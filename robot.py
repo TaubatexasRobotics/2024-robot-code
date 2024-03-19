@@ -37,11 +37,11 @@ class MyRobot(wpilib.TimedRobot):
         # wpilib.CameraServer.launch()
         self.smartdashboard = wpilib.SmartDashboard
                 
-        
     def robotPeriodic(self) -> None:
         self.drivetrain.robotPeriodic()
         for mechanism in self.mechanisms:
             try:
+                self.controller.updateDashboard(self.smartdashboard)
                 mechanism.update_dashboard(self.smartdashboard)
 
             except BaseException as e:
@@ -82,10 +82,9 @@ class MyRobot(wpilib.TimedRobot):
             if self.task_count == 0:
                 self.shooter.shoot()
                 if self.timer.get() > 2:
-                    self.shooter.store_gamepiece()
+                    self.intake.store_gamepiece()
                 if self.timer.get() > 4:
                     self.shooter.stop_shooter()
-                    self.shooter.stop_shooter_feeder()
                     self.task_count += 1
                 return
 

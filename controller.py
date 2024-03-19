@@ -1,24 +1,33 @@
 import wpilib
 from joystick_profiles import joysticks
-joysticks_profile = 'playstation_dualshock_4'
-joystick_map = joysticks[joysticks_profile]
+joystick_profile = 'playstation_dualshock_4'
 
 LOW_SENSITIVITY_FACTOR = 0.6
 
 class Controller:
+
     def __init__(self, joystick_port=0):
+        self.joystick_map = joysticks[joystick_profile]
         self.stick = wpilib.Joystick(joystick_port)
         self.low_sensitivity_mode = False
-        self.joystick_map = joystick_map
+        self.joystick_map = self.joystick_map
+
+    def updateDashboard(self, dashboard:wpilib.SmartDashboard) -> None:
+        # set options for checkbox for autonomous
+        self.joystick_profile = wpilib.SendableChooser()
+        self.joystick_profile.setDefaultOption("PlayStation 4", "playstation_dualshock_4")
+        self.joystick_profile.addOption("Xbox", "xbox_controller")
+
+        dashboard.putData("Joystick Profile", self.joystick_profile)
 
     def is_pressed(self, button_name: str) -> bool:
-        return self.stick.getRawButtonPressed(joystick_map[button_name])
+        return self.stick.getRawButtonPressed(self.joystick_map[button_name])
     
     def is_released(self, button_name: str) -> bool:
-        return self.stick.getRawButtonReleased(joystick_map[button_name])
+        return self.stick.getRawButtonReleased(self.joystick_map[button_name])
     
     def is_held(self, button_name: str) -> bool:
-        return self.stick.getRawButton(joystick_map[button_name])
+        return self.stick.getRawButton(self.joystick_map[button_name])
     
     def are_all_released(self, *button_names: str) -> bool:
         button_states = [self.is_released(button_name) for button_name in button_names]
@@ -45,7 +54,7 @@ class Controller:
         return any(button_states)
     
     def axis_value(self, axis_name:str) -> bool:
-        axis_value = self.stick.getRawAxis(joystick_map[axis_name])
+        axis_value = self.stick.getRawAxis(self.joystick_map[axis_name])
         return axis_value
     
     def axis_to_digital(self, axis_name: str, threshold: float) -> bool:
@@ -66,6 +75,10 @@ class Controller:
     def get_drive(self) -> tuple[float, float]:
         rt_value = self.axis_value('AXIS_RIGHT_TRIGGER')
         lt_value = self.axis_value('AXIS_LEFT_TRIGGER')
+        
+        if joystick_profile == 'playstation_dualshock_4':
+            rt_value = rt_value + 0.5
+            lt_value = lt_value + 0.5
         
         combined_value = lt_value - rt_value
 
